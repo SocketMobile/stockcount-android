@@ -1,0 +1,88 @@
+package com.socketmobile.stockcount.ui
+
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.*
+import android.widget.TextView
+import com.socketmobile.stockcount.R
+import com.socketmobile.stockcount.helper.createFile
+import com.socketmobile.stockcount.helper.getFiles
+import com.socketmobile.stockcount.model.RMFile
+import kotlinx.android.synthetic.main.activity_home.*
+
+class HomeActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
+        filesRecyclerView.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        filesRecyclerView.adapter = FilesAdapter()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item != null) {
+            when(item.itemId) {
+                R.id.addFile -> {
+                    goEditActivity(createFile(this))
+                }
+                R.id.showOptions -> {
+                    val i = Intent(this, OptionsActivity::class.java)
+                    startActivity(i)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun goEditActivity(fileName: String) {
+        val i = Intent(this, EditActivity::class.java)
+        i.putExtra("fileName", fileName)
+        startActivity(i)
+    }
+
+    class FilesAdapter: RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
+        val files = getFiles()
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesAdapter.ViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val fileView = inflater.inflate(R.layout.view_file, parent, false)
+
+            return ViewHolder(fileView)
+        }
+
+        override fun getItemCount(): Int {
+            return files.size
+        }
+
+        override fun onBindViewHolder(holder: FilesAdapter.ViewHolder, position: Int) {
+            val item = files.get(position)
+            holder.nameTextView?.setText(item?.fileTitle)
+            holder.contentTextView?.setText(item?.firstScan)
+
+            holder.itemView.setOnClickListener {
+                val activity = it.context as? HomeActivity
+                if (item != null) {
+                    activity?.goEditActivity(item.fileName)
+                }
+            }
+        }
+
+        class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+            val nameTextView = itemView?.findViewById<TextView>(R.id.fileTitleTextView)
+            val contentTextView = itemView?.findViewById<TextView>(R.id.scanContentTextView)
+        }
+    }
+}
