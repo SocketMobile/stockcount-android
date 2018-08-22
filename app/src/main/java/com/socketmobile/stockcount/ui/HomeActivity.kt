@@ -10,7 +10,6 @@ import android.widget.TextView
 import com.socketmobile.stockcount.R
 import com.socketmobile.stockcount.helper.createFile
 import com.socketmobile.stockcount.helper.getFiles
-import com.socketmobile.stockcount.model.RMFile
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
