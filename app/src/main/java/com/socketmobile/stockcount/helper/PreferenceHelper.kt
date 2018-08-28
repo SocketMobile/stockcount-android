@@ -2,7 +2,7 @@ package com.socketmobile.stockcount.helper
 
 import android.content.Context
 import android.preference.PreferenceManager
-import java.util.*
+
 
 const val SHOW_INSTRUCTION_KEY = "HaveToShowInstruction"
 const val AUTO_ADD_QUANTITY_KEY = "AutoAddQuantity"

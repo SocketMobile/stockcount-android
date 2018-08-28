@@ -2,9 +2,6 @@ package com.socketmobile.stockcount.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.MenuItem
 import com.socketmobile.stockcount.R
 import com.socketmobile.stockcount.helper.*
 import kotlinx.android.synthetic.main.activity_scan_settings.*

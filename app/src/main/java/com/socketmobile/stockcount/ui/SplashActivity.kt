@@ -1,10 +1,8 @@
 package com.socketmobile.stockcount.ui
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import com.socketmobile.stockcount.R
 import com.socketmobile.stockcount.helper.haveToShowInstruction
 import java.util.*
