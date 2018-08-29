@@ -2,14 +2,24 @@ package com.socketmobile.stockcount
 
 import android.app.Application
 import android.os.Environment
+import com.crashlytics.android.Crashlytics
+import com.socketmobile.capture.android.Capture
+import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import java.io.File
 import java.io.IOException
+
+
 
 class StockCountApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(applicationContext)
+        Fabric.with(this, Crashlytics())
+
+        Capture.builder(getApplicationContext())
+                .enableLogging(BuildConfig.DEBUG)
+                .build();
 
         if (isExternalStorageWritable()) {
             var appDir: File? = null
