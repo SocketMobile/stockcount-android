@@ -1,37 +1,24 @@
 package com.socketmobile.stockcount.ui
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.socketmobile.stockcount.R
 import kotlinx.android.synthetic.main.fragment_companion_dialog.*
 
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [CompanionDialogFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [CompanionDialogFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class CompanionDialogFragment : DialogFragment() {
     var companionDialogListener: OnCompanionDialogListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_companion_dialog, container, false)
 
-        return view
+        return inflater.inflate(R.layout.fragment_companion_dialog, container, false)
     }
 
     override fun onStart() {

@@ -53,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     class FilesAdapter: RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
-        val files = getFiles()
+        private val files = getFiles()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesAdapter.ViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -67,9 +67,9 @@ class HomeActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: FilesAdapter.ViewHolder, position: Int) {
-            val item = files.get(position)
-            holder.nameTextView?.setText(item?.fileTitle)
-            holder.contentTextView?.setText(item?.firstScan)
+            val item = files[position]
+            holder.nameTextView?.text = item?.fileTitle
+            holder.contentTextView?.text = item?.firstScan
 
             holder.itemView.setOnClickListener {
                 val activity = it.context as? HomeActivity

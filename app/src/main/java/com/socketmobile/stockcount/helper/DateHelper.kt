@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-val FULL_FORMAT = "MM/dd/yyyy"
-val WITHOUT_WILDCARD_FORMAT = "yyMMddHHmmss"
+const val FULL_FORMAT = "MM/dd/yyyy"
+const val WITHOUT_WILDCARD_FORMAT = "yyMMddHHmmss"
 
 fun getDateString(date: Date, format: String): String {
-    val sdf = SimpleDateFormat(format)
+    val sdf = SimpleDateFormat(format, Locale.US)
     return sdf.format(date)
 }
 fun getFullDateString(date: Date): String {
