@@ -32,7 +32,6 @@ import com.socketmobile.stockcount.helper.*
 import com.socketmobile.stockcount.model.RMFile
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit.*
-import kotlinx.android.synthetic.main.activity_options.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -342,7 +341,6 @@ class EditActivity : AppCompatActivity() {
         deviceButton.isEnabled = enabled
     }
     fun setSoftScanStatus(status: Byte) {
-        captureClient.setSoftScanStatus(status)
         //captureClient?.setSoftScanStatus(status)
     }
 }
