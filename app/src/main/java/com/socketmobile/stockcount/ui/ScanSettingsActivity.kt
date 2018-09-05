@@ -15,7 +15,7 @@ class ScanSettingsActivity : AppCompatActivity() {
 
         addQuantitySwitch.isChecked = autoAddQuantity(this)
         updateCommaComponents()
-        defaultQuantityTextView.text = getDefaultQuantity(this).toString()
+        defaultQuantityTextView.setText(getDefaultQuantity(this).toString())
         updateNewScanComponents()
         vibrateSwitch.isChecked = isVibrationOnScan(this)
         supportD600Switch.isChecked = isD600Support(this)
@@ -24,7 +24,7 @@ class ScanSettingsActivity : AppCompatActivity() {
             var quantity = Integer.parseInt(defaultQuantityTextView.text.toString())
             if (quantity > 0) {
                 quantity --
-                defaultQuantityTextView.text = quantity.toString()
+                defaultQuantityTextView.setText(quantity.toString())
             }
             setDefaultQuantity(this@ScanSettingsActivity, quantity)
             updatePreview()
@@ -33,20 +33,20 @@ class ScanSettingsActivity : AppCompatActivity() {
             var quantity = Integer.parseInt(defaultQuantityTextView.text.toString())
             if (quantity < 50) {
                 quantity ++
-                defaultQuantityTextView.text = quantity.toString()
+                defaultQuantityTextView.setText(quantity.toString())
             }
             setDefaultQuantity(this@ScanSettingsActivity, quantity)
             updatePreview()
         }
-        supportD600Switch.setOnCheckedChangeListener { _, isChecked ->
+        supportD600Switch.setOnCheckedChangeListener { buttonView, isChecked ->
             setD600Support(this, isChecked)
             updatePreview()
         }
-        vibrateSwitch.setOnCheckedChangeListener { _, isChecked ->
+        vibrateSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             setVibrationOnScan(this, isChecked)
             updatePreview()
         }
-        addQuantitySwitch.setOnCheckedChangeListener { _, isChecked ->
+        addQuantitySwitch.setOnCheckedChangeListener { buttonView, isChecked ->
             setAutoAddQuantity(this, isChecked)
             updatePreview()
         }
@@ -73,7 +73,7 @@ class ScanSettingsActivity : AppCompatActivity() {
         updatePreview()
     }
 
-    private fun updateCommaComponents() {
+    fun updateCommaComponents() {
         if (isDelineatorComma(this)) {
             commaCheckImageView.setImageResource(R.drawable.icon_check)
             noCommaCheckImageView.setImageResource(0)
@@ -82,7 +82,7 @@ class ScanSettingsActivity : AppCompatActivity() {
             noCommaCheckImageView.setImageResource(R.drawable.icon_check)
         }
     }
-    private fun updateNewScanComponents() {
+    fun updateNewScanComponents() {
         if (isAddNewLine(this)) {
             newLineCheckImageView.setImageResource(R.drawable.icon_check)
             semiColonCheckImageView.setImageResource(0)
@@ -91,11 +91,11 @@ class ScanSettingsActivity : AppCompatActivity() {
             semiColonCheckImageView.setImageResource(R.drawable.icon_check)
         }
     }
-    private fun updatePreview() {
+    fun updatePreview() {
         var preview = "The result will look like:\n"
         preview += getLineForBarcode(this, "[barcode]")
         preview += getLineForBarcode(this, "[barcode]")
-        previewTextView.text = preview
+        previewTextView.setText(preview)
     }
 
     override fun onSupportNavigateUp(): Boolean {

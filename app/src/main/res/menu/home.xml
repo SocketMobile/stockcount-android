@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/addFile"
-        android:title="Add File"
-        android:icon="@drawable/btn_new" />
-    <item
         android:id="@+id/showOptions"
         android:title="Options"
-        android:icon="@drawable/btn_option" />
+        android:icon="@drawable/btn_option"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/addFile"
+        android:title="Add File"
+        android:icon="@drawable/btn_new"
+        app:showAsAction="always" />
 </menu>

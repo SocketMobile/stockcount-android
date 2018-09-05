@@ -1,67 +1,61 @@
 package com.socketmobile.stockcount.ui
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.os.*
+import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.text.method.TextKeyListener
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import com.socketmobile.capture.CaptureError
-import com.socketmobile.capture.android.Capture
-import com.socketmobile.capture.android.events.ConnectionStateEvent
-import com.socketmobile.capture.client.*
+import com.socketmobile.capture.Error
+import com.socketmobile.capture.Property
+import com.socketmobile.capture.client.callbacks.PropertyCallback
 import com.socketmobile.stockcount.R
-import com.socketmobile.stockcount.helper.*
 import com.socketmobile.stockcount.model.RMFile
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit.*
-import org.greenrobot.eventbus.Subscribe
+import com.socketmobile.capture.client.DeviceAvailabilityEvent
+import com.socketmobile.capture.android.Capture
+import com.socketmobile.stockcount.BuildConfig
+import android.view.inputmethod.InputMethodManager
+import com.socketmobile.capture.client.DeviceClient
+import com.socketmobile.capture.client.DataEvent
+import com.socketmobile.stockcount.helper.*
+import io.realm.Realm
 import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
 
 class EditActivity : AppCompatActivity() {
     lateinit var file: RMFile
-    private var captureClient: CaptureClient? = null
-    private var scannerStatus = DeviceState.GONE
-    private var serviceStatus = ConnectionState.DISCONNECTED
-    private val tag = EditActivity::class.java.name!!
-    var isSoftScan = false
-        set(value) {
-            setSoftScanStatus(if (isSoftScan) 0 else 1)
-        }
-
+    val deviceMap = mutableMapOf<String, DeviceClient>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        fileEditText.setOnFocusChangeListener { _, hasFocus ->
+        fileEditText.setOnFocusChangeListener { v, hasFocus ->
             editTypeView.visibility = if (hasFocus || true) View.VISIBLE else View.GONE
         }
+        Capture.builder(getApplicationContext())
+                .enableLogging(BuildConfig.DEBUG)
+                .build();
 
         deviceButton.isEnabled = false
         scanButton.setOnClickListener {
-            onScanClicked()
+            triggerDevices()
         }
         scanRightButton.setOnClickListener {
-            onScanClicked()
+            triggerDevices()
         }
         abcButton.setOnClickListener {
             toggleKeyboardNumeric()
@@ -101,12 +95,17 @@ class EditActivity : AppCompatActivity() {
         when(item?.itemId) {
             R.id.menuDelete -> {
                 val dialog = AlertDialog.Builder(this)
-                        .setPositiveButton("OK") { _, _ ->
-                            deleteRMFile(file)
-                            finish()
-                        }.setNegativeButton("Cancel") { dialog, _ ->
-                            dialog?.dismiss()
-                        }.setMessage("Remove file '${file.fileName}'?")
+                        .setPositiveButton("OK", object: DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                deleteRMFile(file)
+                                finish()
+                            }
+
+                        }).setNegativeButton("Cancel", object: DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                dialog?.dismiss()
+                            }
+                        }).setMessage("Remove file '${file.fileName}'?")
                         .create()
                 dialog.show()
             }
@@ -114,7 +113,7 @@ class EditActivity : AppCompatActivity() {
                 Realm.getDefaultInstance().executeTransaction {
                     file.fileContent = fileEditText.text.toString()
                     val lines = file.fileContent.split("\n")
-                    if (lines.isNotEmpty()) {
+                    if (lines.size > 0) {
                         file.fileTitle = lines[0].trim()
                     }
                     if (lines.size > 1) {
@@ -144,76 +143,64 @@ class EditActivity : AppCompatActivity() {
         return true
     }
 
-    private fun showCompanionDialog() {
-        val dialogFrag = CompanionDialogFragment()
-        dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
-            override fun onUseCamera() {
-                isSoftScan = true
-            }
-        }
-        dialogFrag.show(supportFragmentManager, "Companion Dialog")
-    }
-    private fun onScanClicked() {
-        if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
-            triggerDevices(captureClient!!)
-        }else {
-            showCompanionDialog()
-        }
-    }
-    private fun toggleKeyboardNumeric() {
+    fun toggleKeyboardNumeric() {
         if (abcButton.text.toString() == "123") {
             useNumericKeyboard()
         } else {
             useTextKeyboard()
         }
     }
-    private fun useTextKeyboard() {
+    fun useTextKeyboard() {
         fileEditText.keyListener = TextKeyListener.getInstance()
-        abcButton.text = getString(R.string.number_title)
+        abcButton.setText("123")
     }
-    private fun useNumericKeyboard() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            fileEditText.keyListener = android.text.method.DigitsKeyListener.getInstance(Locale.US)
-        } else {
-            fileEditText.keyListener = android.text.method.DigitsKeyListener.getInstance()
-        }
-        abcButton.text = getString(R.string.alpha_title)
+    fun useNumericKeyboard() {
+        fileEditText.keyListener = android.text.method.DigitsKeyListener.getInstance()
+        abcButton.setText("abc")
     }
-    private fun hideKeyboard() {
+    fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = currentFocus
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun shareContent() {
+    fun shareContent() {
         clearStockCountDir()
         val tempFile = File(getStockCountDir(), file.fileName)
         val fos = FileOutputStream(tempFile)
         fos.write(file.fileContent.toByteArray())
         fos.close()
+        tempFile.setReadable(true, false)
 
         val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
+        i.setType("text/plain")
         i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile))
         val chooser = Intent.createChooser(i, "Share via")
         startActivity(chooser)
     }
 
-    private fun triggerDevices(captureClient: CaptureClient) {
-        for(device in captureClient.devices) {
-            device.trigger { error, property ->
-                Log.d(tag, "$error, $property")
+    fun triggerDevices() {
+        if (deviceMap.size > 0) {
+            for(deviceClient in deviceMap.values) {
+                deviceClient.trigger(object: PropertyCallback() {
+                    override fun onComplete(p: Property?, err: Error?) {
+
+                    }
+                })
             }
+        } else {
+
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onData(event: DataEvent) {
+        val device = event.device
         val data = event.data.string.trim()
         addScanData(getLineForBarcode(this, data))
     }
 
-    private fun addScanData(data: String) {
+    fun addScanData(data: String) {
         val newContent = fileEditText.text.toString() + data
         fileEditText.setText(newContent)
         goToEnd()
@@ -226,114 +213,44 @@ class EditActivity : AppCompatActivity() {
             }
         }
     }
-    private fun goToEnd() {
+    fun goToEnd() {
         fileEditText.setSelection(fileEditText.text.toString().length)
     }
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onCaptureDeviceStateChange(event: DeviceStateEvent) {
-        scannerStatus = event.state.intValue()
+    fun onCaptureDeviceAvailabilityChanged(event: DeviceAvailabilityEvent) {
+        val device = event.device
+        val eventType = event.type
 
-        when(scannerStatus) {
-            DeviceState.AVAILABLE -> {
-                Log.d(tag, "Scanner State Available.")
-                if (isSoftScan) {
-                    isSoftScan = false
-                }
-            }
-            DeviceState.OPEN -> {
-                Log.d(tag, "Scanner State Open.")
-            }
-            DeviceState.READY -> {
-                Log.d(tag, "Scanner State Ready.")
-            }
-            DeviceState.GONE -> {
-                Log.d(tag, "Scanner State Gone.")
-            }
-            else -> {
-                Log.d(tag, "Scanner State $scannerStatus")
-            }
+        if (eventType == DeviceAvailabilityEvent.TYPE_REMOVAL) {
+            // No device
+            deviceMap.remove(event.device.deviceGuid)
+        } else if (eventType == DeviceAvailabilityEvent.TYPE_ARRIVAL || eventType == DeviceAvailabilityEvent.TYPE_CLOSE) {
+            // Device is closed
+            deviceMap.remove(event.device.deviceGuid)
+        } else if (eventType == DeviceAvailabilityEvent.TYPE_OPEN || eventType == DeviceAvailabilityEvent.TYPE_OWNERSHIP_LOST) {
+            // Device open, but no ownership
+            deviceMap.remove(event.device.deviceGuid)
+        } else if (eventType == DeviceAvailabilityEvent.TYPE_OWNERSHIP_OBTAINED) {
+            deviceMap.put(event.device.deviceGuid, event.device)
         }
+
         updateDeviceButton()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onCaptureServiceConnectionStateChange(event: ConnectionStateEvent) {
-        val state = event.state
-
-        if (state.hasError()) {
-            val error = state.error
-            Log.d(tag, "Error on service connection. Error: ${error.code}, ${error.message}")
-            when(error.code) {
-                CaptureError.COMPANION_NOT_INSTALLED -> {
-                    val alert = AlertDialog.Builder(this)
-                            .setMessage("Please install companion app.")
-                            .setPositiveButton("OK") { dialog, _ ->
-                                dialog.dismiss()
-
-                                val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.socketmobile.companion"))
-                                startActivity(i)
-                            }.setNegativeButton("Cancel") { dialog, _ ->
-                                dialog.dismiss()
-                            }.create()
-                    alert.show()
-                }
-                CaptureError.SERVICE_NOT_RUNNING -> {
-                    if (state.isDisconnected) {
-                        if (Capture.notRestartedRecently()) {
-                            Capture.restart(this)
-                        }
-                    }
-                }
-                CaptureError.BLUETOOTH_NOT_ENABLED -> {
-                    val i = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                    startActivity(i)
-                }
-                else -> {
-
-                }
-            }
-        } else {
-            captureClient = event.client
-
-            serviceStatus = state.intValue()
-            Log.d(tag, "Service Status is changed to $serviceStatus($state)")
-            when(serviceStatus) {
-                ConnectionState.CONNECTING -> {
-                }
-                ConnectionState.CONNECTED -> {
-                }
-                ConnectionState.READY -> {
-
-                }
-                ConnectionState.DISCONNECTING -> {
-
-                }
-                ConnectionState.DISCONNECTED -> {
-
-                }
-            }
-        }
-        updateDeviceButton()
-    }
-
-
-    private fun updateDeviceButton() {
-        if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
+    fun updateDeviceButton() {
+        if (deviceMap.size > 0) {
             enableDeviceButton()
         } else {
             disableDeviceButton()
         }
     }
-    private fun disableDeviceButton() {
+    fun disableDeviceButton() {
         enableDeviceButton(false)
     }
-    private fun enableDeviceButton() {
+    fun enableDeviceButton() {
         enableDeviceButton(true)
     }
-    private fun enableDeviceButton(enabled: Boolean) {
+    fun enableDeviceButton(enabled: Boolean) {
         deviceButton.isEnabled = enabled
-    }
-    private fun setSoftScanStatus(status: Byte) {
-        //captureClient?.setSoftScanStatus(status)
     }
 }

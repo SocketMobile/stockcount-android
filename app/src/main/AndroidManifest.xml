@@ -62,10 +62,6 @@
         <meta-data
             android:name="com.socketmobile.capture.DEVELOPER_ID"
             android:value="@string/developer_id"/>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="0e60c6e2630a95eabe20c0d6c0150c456051d523" />
     </application>
 
 </manifest>

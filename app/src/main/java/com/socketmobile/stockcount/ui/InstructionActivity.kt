@@ -65,7 +65,7 @@ class InstructionActivity : AppCompatActivity() {
     }
 
     class InstructionPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
-        private val resArray = listOf(R.drawable.instruction_1, R.drawable.instruction_2, R.drawable.instruction_3)
+        val resArray = listOf(R.drawable.instruction_1, R.drawable.instruction_2, R.drawable.instruction_3)
 
         override fun getItem(position: Int): Fragment {
             val f = InstructionPageFragment()
