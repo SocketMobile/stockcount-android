@@ -8,7 +8,7 @@ import com.socketmobile.stockcount.helper.haveToShowInstruction
 import java.util.*
 
 class SplashActivity : AppCompatActivity() {
-    lateinit var timer: Timer
+    private lateinit var timer: Timer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)

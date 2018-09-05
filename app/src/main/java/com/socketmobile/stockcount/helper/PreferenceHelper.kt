@@ -102,7 +102,7 @@ fun getScanDate(c: Context): String {
 
 fun setScanDate(c: Context, value: String) {
     val editor = PreferenceManager.getDefaultSharedPreferences(c).edit()
-    editor.putString(SCAN_DATE_KEY, DEFAULT_SCAN_DATE)
+    editor.putString(SCAN_DATE_KEY, value)
     editor.apply()
 }
 
@@ -120,10 +120,10 @@ fun getLineForBarcode(c: Context, barcode: String? = null): String {
     var retValue = if (barcode.isNullOrEmpty()) "txt_barcode" else barcode
     val defaultQuantity = getDefaultQuantity(c)
     if (autoAddQuantity(c)) {
-        if (isDelineatorComma(c)) {
-            retValue += ", ${defaultQuantity}"
+        retValue += if (isDelineatorComma(c)) {
+            ", $defaultQuantity"
         } else {
-            retValue += " ${defaultQuantity}"
+            " $defaultQuantity"
         }
     }
 
