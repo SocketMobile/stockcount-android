@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="16dp"
-            android:text="Scan Settings"
+            android:text="@string/scan_settings"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
         <ImageView
             android:layout_width="24dp"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="16dp"
-            android:text="Get Started"
+            android:text="@string/get_started"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
         <ImageView
             android:layout_width="24dp"
@@ -78,6 +78,7 @@
         android:adjustViewBounds="true"
         android:src="@drawable/img_device"/>
     <TextView
+        android:id="@+id/verInfoTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -98,12 +99,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Learn more about the "/>
+            android:text="@string/learn_more_about_the"/>
         <TextView
             android:id="@+id/captureSdkTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Capture SDK."
+            android:text="@string/capture_sdk"
             android:textColor="@android:color/holo_blue_light"/>
     </LinearLayout>
 </LinearLayout>

@@ -31,7 +31,7 @@ class CompanionDialogFragment : DialogFragment() {
             dismiss()
         }
         launchCompanionTextView.setOnClickListener {
-            val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.socketmobile.companion"))
+            val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.companion_store_url)))
             startActivity(i)
             dismiss()
         }

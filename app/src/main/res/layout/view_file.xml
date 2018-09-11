@@ -13,7 +13,7 @@
         android:id="@+id/fileTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
+        android:text=""
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:textColor="@android:color/black"/>
     <TextView
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_normal"
-        android:text="ABCD"
+        android:text=""
         android:layout_below="@+id/fileTitleTextView"
         android:textColor="@android:color/darker_gray"/>
 </RelativeLayout>
