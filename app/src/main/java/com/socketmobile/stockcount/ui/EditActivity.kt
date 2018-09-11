@@ -268,14 +268,13 @@ class EditActivity : AppCompatActivity() {
             when(error.code) {
                 CaptureError.COMPANION_NOT_INSTALLED -> {
                     val alert = AlertDialog.Builder(this)
-                            .setMessage("Please install companion app.")
-                            .setPositiveButton("OK") { dialog, _ ->
+                            .setMessage(R.string.prompt_install_companion)
+                            .setPositiveButton("Cancel") { dialog, _ ->
                                 dialog.dismiss()
-
+                            }.setNegativeButton("Install") { dialog, _ ->
+                                dialog.dismiss()
                                 val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.socketmobile.companion"))
                                 startActivity(i)
-                            }.setNegativeButton("Cancel") { dialog, _ ->
-                                dialog.dismiss()
                             }.create()
                     alert.show()
                 }
