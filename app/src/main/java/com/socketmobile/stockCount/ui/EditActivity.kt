@@ -101,12 +101,12 @@ class EditActivity : AppCompatActivity() {
         when(item?.itemId) {
             R.id.menuDelete -> {
                 val dialog = AlertDialog.Builder(this)
-                        .setPositiveButton("OK") { _, _ ->
+                        .setPositiveButton(R.string.ok) { _, _ ->
                             deleteRMFile(file)
                             finish()
-                        }.setNegativeButton("Cancel") { dialog, _ ->
+                        }.setNegativeButton(R.string.cancel) { dialog, _ ->
                             dialog?.dismiss()
-                        }.setMessage("Remove file '${file.fileName}'?")
+                        }.setMessage(getString(R.string.prompt_remove_file) + " '${file.fileName}'?")
                         .create()
                 dialog.show()
             }
@@ -150,8 +150,8 @@ class EditActivity : AppCompatActivity() {
         dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
             override fun onUseCamera() {
                 AlertDialog.Builder(this@EditActivity)
-                        .setMessage("This feature will be available soon.")
-                        .setPositiveButton("OK") { dialog, _ ->
+                        .setMessage(R.string.feature_will_soon)
+                        .setPositiveButton(R.string.ok) { dialog, _ ->
                             dialog.dismiss()
                         }.create().show()
             }
@@ -166,7 +166,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
     private fun toggleKeyboardNumeric() {
-        if (abcButton.text.toString() == "123") {
+        if (abcButton.text.toString() == getString(R.string.number_title)) {
             useNumericKeyboard()
         } else {
             useTextKeyboard()
@@ -198,10 +198,10 @@ class EditActivity : AppCompatActivity() {
         fos.close()
 
         val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
+        i.type = getString(R.string.type_text)
         i.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, applicationContext.packageName + ".fileProvider", tempFile))
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        val chooser = Intent.createChooser(i, "Share via")
+        val chooser = Intent.createChooser(i, getString(R.string.share_via))
         startActivity(chooser)
     }
 
@@ -227,6 +227,7 @@ class EditActivity : AppCompatActivity() {
         goToEnd()
         if (isVibrationOnScan(this)) {
             val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
             } else {
@@ -275,11 +276,11 @@ class EditActivity : AppCompatActivity() {
                 CaptureError.COMPANION_NOT_INSTALLED -> {
                     val alert = AlertDialog.Builder(this)
                             .setMessage(R.string.prompt_install_companion)
-                            .setPositiveButton("Cancel") { dialog, _ ->
+                            .setPositiveButton(R.string.cancel) { dialog, _ ->
                                 dialog.dismiss()
-                            }.setNegativeButton("Install") { dialog, _ ->
+                            }.setNegativeButton(R.string.install) { dialog, _ ->
                                 dialog.dismiss()
-                                val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.socketmobile.companion"))
+                                val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.store_url)))
                                 startActivity(i)
                             }.create()
                     alert.show()

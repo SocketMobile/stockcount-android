@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
-        android:text="Get Started"
+        android:text="@string/get_started"
         android:textColor="@android:color/white"
         android:backgroundTint="#0089CF"
         android:textAllCaps="false"/>

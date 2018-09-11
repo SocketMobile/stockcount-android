@@ -14,7 +14,7 @@ android {
         applicationId "com.socketmobile.stockCount"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 12
+        versionCode 13
         versionName "0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

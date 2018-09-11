@@ -19,4 +19,37 @@
     <string name="number_title">123</string>
     <string name="alpha_title">abc</string>
     <string name="prompt_install_companion">In order to connect to your Socket Mobile scanner in Stock Count app, you need to install and run Socket Mobile Companion app from Google Play Store.</string>
+    <string name="share_via">Share via</string>
+    <string name="cancel">Cancel</string>
+    <string name="install">Install</string>
+    <string name="store_url">https://play.google.com/store/apps/details?id=com.socketmobile.companion</string>
+    <string name="type_text">text/plain</string>
+    <string name="feature_will_soon">This feature will be available soon.</string>
+    <string name="ok">OK</string>
+    <string name="prompt_remove_file">Remove file</string>
+    <string name="preview_prefix">The result will look like:\n</string>
+    <string name="temp_barcode">[barcode]</string>
+    <string name="no_socket_scanner_is_connected">No Socket scanner is connected.</string>
+    <string name="make_sure_your_scanner">Make sure your scanner is powered on and connected in Application Mode.</string>
+    <string name="launch_companion">Launch Companion to connect in Application Mode</string>
+    <string name="prompt_continue_without_scanner">If you continue without a connected scanner, the app will launch the camera on your device for scanning.</string>
+    <string name="use_camera">Use Camera</string>
+    <string name="try_again">Try Again</string>
+    <string name="scan">SCAN</string>
+    <string name="get_started">Get Started</string>
+    <string name="scan_settings">Scan Settings</string>
+    <string name="automatically_add_quantity">Automatically add quantity</string>
+    <string name="quantity_format_options">Quantity format options</string>
+    <string name="comma_space_and_quantity">Comma, space and quantity</string>
+    <string name="space_and_quantity">Space and quantity</string>
+    <string name="set_default_quantity_as">Set default quantity as</string>
+    <string name="new_line_start">Start new scan in a new line</string>
+    <string name="semicolon_start">Start new scan after semicolon</string>
+    <string name="vibrate_when_scans">Vibrate when scans</string>
+    <string name="support_d600">Support D600</string>
+    <string name="delete">Delete</string>
+    <string name="share">Share</string>
+    <string name="save">Save</string>
+    <string name="add_file">Add File</string>
+    <string name="options">Options</string>
 </resources>
