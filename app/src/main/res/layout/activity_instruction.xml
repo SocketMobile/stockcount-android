@@ -33,7 +33,9 @@
         android:id="@+id/startButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get Started"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
+        android:text="@string/get_started"
         android:textColor="@android:color/white"
         android:backgroundTint="#0089CF"
         android:textAllCaps="false"/>

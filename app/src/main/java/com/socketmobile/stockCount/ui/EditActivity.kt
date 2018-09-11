@@ -1,4 +1,5 @@
-package com.socketmobile.stockcount.ui
+/**  Copyright © 2018 Socket Mobile, Inc. */
+package com.socketmobile.stockCount.ui
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -12,6 +13,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.method.TextKeyListener
@@ -24,9 +26,9 @@ import com.socketmobile.capture.CaptureError
 import com.socketmobile.capture.android.Capture
 import com.socketmobile.capture.android.events.ConnectionStateEvent
 import com.socketmobile.capture.client.*
-import com.socketmobile.stockcount.R
-import com.socketmobile.stockcount.helper.*
-import com.socketmobile.stockcount.model.RMFile
+import com.socketmobile.stockCount.R
+import com.socketmobile.stockCount.helper.*
+import com.socketmobile.stockCount.model.RMFile
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit.*
 import org.greenrobot.eventbus.Subscribe
@@ -34,17 +36,15 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
+import kotlin.collections.HashMap
 
 class EditActivity : AppCompatActivity() {
     lateinit var file: RMFile
     private var captureClient: CaptureClient? = null
-    private var scannerStatus = DeviceState.GONE
     private var serviceStatus = ConnectionState.DISCONNECTED
     private val tag = EditActivity::class.java.name!!
-    var isSoftScan = false
-        set(value) {
-            setSoftScanStatus(if (isSoftScan) 0 else 1)
-        }
+    private val deviceStateMap = HashMap<String, DeviceState>()
+    private val deviceClientMap = HashMap<String, DeviceClient>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,12 +101,12 @@ class EditActivity : AppCompatActivity() {
         when(item?.itemId) {
             R.id.menuDelete -> {
                 val dialog = AlertDialog.Builder(this)
-                        .setPositiveButton("OK") { _, _ ->
+                        .setPositiveButton(R.string.ok) { _, _ ->
                             deleteRMFile(file)
                             finish()
-                        }.setNegativeButton("Cancel") { dialog, _ ->
+                        }.setNegativeButton(R.string.cancel) { dialog, _ ->
                             dialog?.dismiss()
-                        }.setMessage("Remove file '${file.fileName}'?")
+                        }.setMessage(getString(R.string.prompt_remove_file) + " '${file.fileName}'?")
                         .create()
                 dialog.show()
             }
@@ -122,6 +122,7 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
                 hideKeyboard()
+                finish()
             }
             R.id.menuShare -> {
                 Realm.getDefaultInstance().executeTransaction {
@@ -148,20 +149,24 @@ class EditActivity : AppCompatActivity() {
         val dialogFrag = CompanionDialogFragment()
         dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
             override fun onUseCamera() {
-                isSoftScan = true
+                AlertDialog.Builder(this@EditActivity)
+                        .setMessage(R.string.feature_will_soon)
+                        .setPositiveButton(R.string.ok) { dialog, _ ->
+                            dialog.dismiss()
+                        }.create().show()
             }
         }
         dialogFrag.show(supportFragmentManager, "Companion Dialog")
     }
     private fun onScanClicked() {
-        if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
-            triggerDevices(captureClient!!)
+        if (canTriggerScanner()) {
+            triggerDevices()
         }else {
             showCompanionDialog()
         }
     }
     private fun toggleKeyboardNumeric() {
-        if (abcButton.text.toString() == "123") {
+        if (abcButton.text.toString() == getString(R.string.number_title)) {
             useNumericKeyboard()
         } else {
             useTextKeyboard()
@@ -193,16 +198,19 @@ class EditActivity : AppCompatActivity() {
         fos.close()
 
         val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile))
-        val chooser = Intent.createChooser(i, "Share via")
+        i.type = getString(R.string.type_text)
+        i.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, applicationContext.packageName + ".fileProvider", tempFile))
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val chooser = Intent.createChooser(i, getString(R.string.share_via))
         startActivity(chooser)
     }
 
-    private fun triggerDevices(captureClient: CaptureClient) {
-        for(device in captureClient.devices) {
+    private fun triggerDevices() {
+        val readyDeviceGuids = deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
+        val readyDevices = deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
+        for(device in readyDevices) {
             device.trigger { error, property ->
-                Log.d(tag, "$error, $property")
+                Log.d(tag, "trigger callback : $error, $property")
             }
         }
     }
@@ -219,6 +227,7 @@ class EditActivity : AppCompatActivity() {
         goToEnd()
         if (isVibrationOnScan(this)) {
             val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
             } else {
@@ -231,14 +240,14 @@ class EditActivity : AppCompatActivity() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onCaptureDeviceStateChange(event: DeviceStateEvent) {
-        scannerStatus = event.state.intValue()
+        val scannerStatus = event.state.intValue()
+        val deviceGuid = event.device.deviceGuid
+        deviceStateMap[deviceGuid] = event.state
+        deviceClientMap[deviceGuid] = event.device
 
         when(scannerStatus) {
             DeviceState.AVAILABLE -> {
                 Log.d(tag, "Scanner State Available.")
-                if (isSoftScan) {
-                    isSoftScan = false
-                }
             }
             DeviceState.OPEN -> {
                 Log.d(tag, "Scanner State Open.")
@@ -266,14 +275,13 @@ class EditActivity : AppCompatActivity() {
             when(error.code) {
                 CaptureError.COMPANION_NOT_INSTALLED -> {
                     val alert = AlertDialog.Builder(this)
-                            .setMessage("Please install companion app.")
-                            .setPositiveButton("OK") { dialog, _ ->
+                            .setMessage(R.string.prompt_install_companion)
+                            .setPositiveButton(R.string.cancel) { dialog, _ ->
                                 dialog.dismiss()
-
-                                val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.socketmobile.companion"))
+                            }.setNegativeButton(R.string.install) { dialog, _ ->
+                                dialog.dismiss()
+                                val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.store_url)))
                                 startActivity(i)
-                            }.setNegativeButton("Cancel") { dialog, _ ->
-                                dialog.dismiss()
                             }.create()
                     alert.show()
                 }
@@ -285,6 +293,7 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
                 CaptureError.BLUETOOTH_NOT_ENABLED -> {
+
                     val i = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                     startActivity(i)
                 }
@@ -303,10 +312,8 @@ class EditActivity : AppCompatActivity() {
                 ConnectionState.CONNECTED -> {
                 }
                 ConnectionState.READY -> {
-
                 }
                 ConnectionState.DISCONNECTING -> {
-
                 }
                 ConnectionState.DISCONNECTED -> {
 
@@ -317,23 +324,21 @@ class EditActivity : AppCompatActivity() {
     }
 
 
+    private fun isServiceConnected(): Boolean {
+        return serviceStatus == ConnectionState.READY
+    }
+    private fun isConnectedDevice(): Boolean {
+        return deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.count() > 0
+    }
+    private fun canTriggerScanner(): Boolean {
+        return isServiceConnected() && isConnectedDevice()
+    }
     private fun updateDeviceButton() {
-        if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
-            enableDeviceButton()
-        } else {
-            disableDeviceButton()
+        runOnUiThread {
+            enableDeviceButton(canTriggerScanner())
         }
-    }
-    private fun disableDeviceButton() {
-        enableDeviceButton(false)
-    }
-    private fun enableDeviceButton() {
-        enableDeviceButton(true)
     }
     private fun enableDeviceButton(enabled: Boolean) {
         deviceButton.isEnabled = enabled
-    }
-    private fun setSoftScanStatus(status: Byte) {
-        //captureClient?.setSoftScanStatus(status)
     }
 }

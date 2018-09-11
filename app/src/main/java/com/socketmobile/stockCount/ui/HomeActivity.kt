@@ -1,4 +1,5 @@
-package com.socketmobile.stockcount.ui
+/**  Copyright © 2018 Socket Mobile, Inc. */
+package com.socketmobile.stockCount.ui
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -7,9 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
-import com.socketmobile.stockcount.R
-import com.socketmobile.stockcount.helper.createFile
-import com.socketmobile.stockcount.helper.getFiles
+import com.socketmobile.stockCount.R
+import com.socketmobile.stockCount.helper.createFile
+import com.socketmobile.stockCount.helper.getFiles
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {

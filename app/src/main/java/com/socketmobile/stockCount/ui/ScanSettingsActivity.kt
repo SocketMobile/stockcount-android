@@ -1,9 +1,10 @@
-package com.socketmobile.stockcount.ui
+/**  Copyright © 2018 Socket Mobile, Inc. */
+package com.socketmobile.stockCount.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.socketmobile.stockcount.R
-import com.socketmobile.stockcount.helper.*
+import com.socketmobile.stockCount.R
+import com.socketmobile.stockCount.helper.*
 import kotlinx.android.synthetic.main.activity_scan_settings.*
 
 class ScanSettingsActivity : AppCompatActivity() {
@@ -92,9 +93,9 @@ class ScanSettingsActivity : AppCompatActivity() {
         }
     }
     private fun updatePreview() {
-        var preview = "The result will look like:\n"
-        preview += getLineForBarcode(this, "[barcode]")
-        preview += getLineForBarcode(this, "[barcode]")
+        var preview = getString(R.string.preview_prefix)
+        preview += getLineForBarcode(this, getString(R.string.temp_barcode))
+        preview += getLineForBarcode(this, getString(R.string.temp_barcode))
         previewTextView.text = preview
     }
 
