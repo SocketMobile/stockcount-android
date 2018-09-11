@@ -1,5 +1,5 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
-package com.socketmobile.stockcount.model;
+package com.socketmobile.stockCount.model;
 
 import java.util.Date;
 

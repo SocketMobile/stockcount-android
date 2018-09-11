@@ -1,5 +1,5 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
-package com.socketmobile.stockcount
+package com.socketmobile.stockCount
 
 import android.app.Application
 import android.os.Environment
