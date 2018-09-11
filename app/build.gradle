@@ -10,12 +10,31 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
+
     defaultConfig {
+        def getGitVersion = { ->
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'describe', '--long'
+                standardOutput = stdout
+            }
+            def gitDescribe = stdout.toString().trim()
+            return gitDescribe.substring(0, gitDescribe.lastIndexOf("-"))
+        }
+        def getVersionCode = { ->
+            def gitVersion = getGitVersion()
+            return Integer.parseInt(gitVersion.replace(".", "").replace("-", ""))
+        }
+        def getVersionNam = {
+            def gitVersion = getGitVersion()
+            return gitVersion.replace("-", ".")
+        }
+
         applicationId "com.socketmobile.stockcount"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.8"
+        versionCode getVersionCode()
+        versionName getVersionNam()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
