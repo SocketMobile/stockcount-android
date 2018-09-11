@@ -123,6 +123,7 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
                 hideKeyboard()
+                finish()
             }
             R.id.menuShare -> {
                 Realm.getDefaultInstance().executeTransaction {
