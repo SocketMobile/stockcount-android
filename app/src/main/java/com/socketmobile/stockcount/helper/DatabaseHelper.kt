@@ -20,7 +20,7 @@ fun createFile(c: Context): String {
     }
     setScanCount(c, scanCount)
 
-    val fileTitle = "Inventory Scan - ${getFullDateString(now)}-${scanCount}"
+    val fileTitle = "Inventory Scan - ${getFullDateString(now)}-$scanCount"
     val fileName = "InventoryScan_${getDateStringWithoutWild(now)}.txt"
 
     val realm = Realm.getDefaultInstance()

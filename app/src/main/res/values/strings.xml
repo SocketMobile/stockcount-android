@@ -8,4 +8,9 @@
     <string name="app_key">MCwCFHgAvvTcP/EefkweuXpAFkSzj3IuAhR2h7M0sNf8EghDx7b7XQhPOSL5KQ==</string>
     <string name="bundle_id">android:com.socketmobile.stockcount</string>
     <string name="developer_id">22dfdb6d-1be1-4308-b7f2-6360c4805631</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="number_title">123</string>
+    <string name="alpha_title">abc</string>
 </resources>
