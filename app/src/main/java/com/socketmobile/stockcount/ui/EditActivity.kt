@@ -150,7 +150,11 @@ class EditActivity : AppCompatActivity() {
         val dialogFrag = CompanionDialogFragment()
         dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
             override fun onUseCamera() {
-                isSoftScan = true
+                AlertDialog.Builder(this@EditActivity)
+                        .setMessage("This feature will be available soon.")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }.create().show()
             }
         }
         dialogFrag.show(supportFragmentManager, "Companion Dialog")
