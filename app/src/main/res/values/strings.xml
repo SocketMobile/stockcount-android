@@ -22,7 +22,7 @@
     <string name="temp_barcode">[barcode]</string>
     <string name="no_connected_socket_scanner">No Socket scanner is connected.</string>
     <string name="make_sure_your_scanner_is_on">Make sure your scanner is powered on and connected in Application Mode.</string>
-    <string name="try_again">Try Again</string>
+    <string name="try_again">Try again</string>
     <string name="launch_companion">Launch Companion to connect in Application Mode</string>
     <string name="prompt_launch_the_camera">If you continue without a connected scanner, the app will launch the camera on your device for scanning.</string>
     <string name="use_camera">Use Camera</string>
@@ -45,7 +45,7 @@
     <string name="semicolon_start">Start new scan after semicolon</string>
     <string name="vibrate_when_scans">Vibrate when scans</string>
     <string name="support_d600">Support D600</string>
-    <string name="sdk_github_url">https://github.com/SocketMobiles</string>
+    <string name="sdk_github_url">https://github.com/SocketMobile</string>
     <string name="title_companion_dialog">Companion Dialog</string>
     <string name="mime_type_text">text/plain</string>
 </resources>
