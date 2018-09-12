@@ -48,4 +48,5 @@
     <string name="sdk_github_url">https://github.com/SocketMobile</string>
     <string name="title_companion_dialog">Companion Dialog</string>
     <string name="mime_type_text">text/plain</string>
+    <string name="feature_will_be_soon">This feature will be available soon.</string>
 </resources>
