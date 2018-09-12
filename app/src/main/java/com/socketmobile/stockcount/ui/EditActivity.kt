@@ -39,13 +39,10 @@ import java.util.*
 class EditActivity : AppCompatActivity() {
     lateinit var file: RMFile
     private var captureClient: CaptureClient? = null
-    private var scannerStatus = DeviceState.GONE
     private var serviceStatus = ConnectionState.DISCONNECTED
     private val tag = EditActivity::class.java.name!!
-    var isSoftScan = false
-        set(value) {
-            setSoftScanStatus(if (isSoftScan) 0 else 1)
-        }
+    private val deviceStateMap = HashMap<String, DeviceState>()
+    private val deviceClientMap = HashMap<String, DeviceClient>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,8 +157,8 @@ class EditActivity : AppCompatActivity() {
         dialogFrag.show(supportFragmentManager, getString(R.string.title_companion_dialog))
     }
     private fun onScanClicked() {
-        if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
-            triggerDevices(captureClient!!)
+        if (canTriggerScanner()) {
+            triggerDevices()
         }else {
             showCompanionDialog()
         }
@@ -206,10 +203,12 @@ class EditActivity : AppCompatActivity() {
         startActivity(chooser)
     }
 
-    private fun triggerDevices(captureClient: CaptureClient) {
-        for(device in captureClient.devices) {
+    private fun triggerDevices() {
+        val readyDeviceGuids = deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
+        val readyDevices = deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
+        for(device in readyDevices) {
             device.trigger { error, property ->
-                Log.d(tag, "$error, $property")
+                Log.d(tag, "trigger callback : $error, $property")
             }
         }
     }
@@ -238,14 +237,14 @@ class EditActivity : AppCompatActivity() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onCaptureDeviceStateChange(event: DeviceStateEvent) {
-        scannerStatus = event.state.intValue()
+        val scannerStatus = event.state.intValue()
+        val deviceGuid = event.device.deviceGuid
+        deviceStateMap[deviceGuid] = event.state
+        deviceClientMap[deviceGuid] = event.device
 
         when(scannerStatus) {
             DeviceState.AVAILABLE -> {
                 Log.d(tag, "Scanner State Available.")
-                if (isSoftScan) {
-                    isSoftScan = false
-                }
             }
             DeviceState.OPEN -> {
                 Log.d(tag, "Scanner State Open.")
@@ -322,24 +321,22 @@ class EditActivity : AppCompatActivity() {
         updateDeviceButton()
     }
 
-
+    private fun isServiceConnected(): Boolean {
+        return serviceStatus == ConnectionState.READY
+    }
+    private fun isConnectedDevice(): Boolean {
+        return deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.count() > 0
+    }
+    private fun canTriggerScanner(): Boolean {
+        return isServiceConnected() && isConnectedDevice()
+    }
     private fun updateDeviceButton() {
-        if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
-            enableDeviceButton()
-        } else {
-            disableDeviceButton()
+        runOnUiThread {
+            enableDeviceButton(canTriggerScanner())
         }
     }
-    private fun disableDeviceButton() {
-        enableDeviceButton(false)
-    }
-    private fun enableDeviceButton() {
-        enableDeviceButton(true)
-    }
+
     private fun enableDeviceButton(enabled: Boolean) {
         deviceButton.isEnabled = enabled
-    }
-    private fun setSoftScanStatus(status: Byte) {
-        //captureClient?.setSoftScanStatus(status)
     }
 }
