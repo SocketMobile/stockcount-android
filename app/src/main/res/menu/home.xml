@@ -4,9 +4,11 @@
     <item
         android:id="@+id/addFile"
         android:title="@string/add_file"
-        android:icon="@drawable/btn_new" />
+        android:icon="@drawable/btn_new" 
+        app:showAsAction="always"/>
     <item
         android:id="@+id/showOptions"
         android:title="@string/options"
-        android:icon="@drawable/btn_option" />
+        android:icon="@drawable/btn_option" 
+        app:showAsAction="always"/>
 </menu>
