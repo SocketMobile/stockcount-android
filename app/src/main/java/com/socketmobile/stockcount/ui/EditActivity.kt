@@ -270,13 +270,12 @@ class EditActivity : AppCompatActivity() {
                 CaptureError.COMPANION_NOT_INSTALLED -> {
                     val alert = AlertDialog.Builder(this)
                             .setMessage(R.string.prompt_install_companion)
-                            .setPositiveButton(R.string.ok) { dialog, _ ->
+                            .setPositiveButton(R.string.cancel) { dialog, _ ->
                                 dialog.dismiss()
-
+                            }.setNegativeButton(R.string.install) { dialog, _ ->
+                                dialog.dismiss()
                                 val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.companion_store_url)))
                                 startActivity(i)
-                            }.setNegativeButton(R.string.cancel) { dialog, _ ->
-                                dialog.dismiss()
                             }.create()
                     alert.show()
                 }

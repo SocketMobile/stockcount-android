@@ -14,7 +14,8 @@
     <string name="number_title">123</string>
     <string name="alpha_title">abc</string>
     <string name="share_via">Share via</string>
-    <string name="prompt_install_companion">Please install companion app.</string>
+    <string name="prompt_install_companion">In order to connect to your Socket Mobile scanner in Stock Count app, you need to install and run Socket Mobile Companion app from Google Play Store.</string>
+    <string name="install">Install</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="companion_store_url">https://play.google.com/store/apps/details?id=com.socketmobile.companion</string>
