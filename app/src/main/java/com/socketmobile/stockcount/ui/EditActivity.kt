@@ -12,6 +12,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.method.TextKeyListener
@@ -195,7 +196,8 @@ class EditActivity : AppCompatActivity() {
 
         val i = Intent(Intent.ACTION_SEND)
         i.type = getString(R.string.mime_type_text)
-        i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile))
+        i.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, applicationContext.packageName + ".fileProvider", tempFile))
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val chooser = Intent.createChooser(i, getString(R.string.share_via))
         startActivity(chooser)
     }
