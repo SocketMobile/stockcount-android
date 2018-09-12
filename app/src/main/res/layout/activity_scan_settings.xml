@@ -25,7 +25,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Automatically add quantity"/>
+                    android:text="@string/automatically_add_quantity"/>
                 <Switch
                     android:id="@+id/addQuantitySwitch"
                     android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quantity format options"/>
+                    android:text="@string/quantity_format_options"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/commaCheckLayout"
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="@dimen/margin_normal"
-                    android:text="Comma, space and quantity"/>
+                    android:text="@string/comma_format"/>
             </LinearLayout>
 
             <View
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="@dimen/margin_normal"
-                    android:text="Space and quantity"/>
+                    android:text="@string/no_comma_format"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Set default quantity as"/>
+                    android:text="@string/set_default_quantity_as"/>
                 <TextView
                     android:id="@+id/defaultQuantityTextView"
                     android:layout_width="32dp"
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="@dimen/margin_normal"
-                    android:text="Start new scan in a new line"/>
+                    android:text="@string/new_line_start"/>
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -176,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_normal"
                     android:layout_weight="1"
-                    android:text="Start new scan after semicolon"/>
+                    android:text="@string/semicolon_start"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/previewTextView"
@@ -197,7 +197,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Vibrate when scans"/>
+                    android:text="@string/vibrate_when_scans"/>
                 <Switch
                     android:id="@+id/vibrateSwitch"
                     android:layout_width="wrap_content"
@@ -215,7 +215,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Support D600"/>
+                    android:text="@string/support_d600"/>
                 <Switch
                     android:id="@+id/supportD600Switch"
                     android:layout_width="wrap_content"

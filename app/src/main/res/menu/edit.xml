@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menuDelete"
-        android:title="Delete"
+        android:title="@string/delete"
         android:icon="@drawable/btn_remove"
         app:showAsAction="always"/>
     <item
         android:id="@+id/menuShare"
-        android:title="Share"
+        android:title="@string/share"
         android:icon="@drawable/btn_upload"
         app:showAsAction="always"/>
     <item
         android:id="@+id/menuSave"
-        android:title="Save"
+        android:title="@string/save"
         android:icon="@drawable/btn_done"
         app:showAsAction="always"/>
 </menu>

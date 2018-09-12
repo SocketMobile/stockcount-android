@@ -101,10 +101,10 @@ class EditActivity : AppCompatActivity() {
         when(item?.itemId) {
             R.id.menuDelete -> {
                 val dialog = AlertDialog.Builder(this)
-                        .setPositiveButton("OK") { _, _ ->
+                        .setPositiveButton(R.string.ok) { _, _ ->
                             deleteRMFile(file)
                             finish()
-                        }.setNegativeButton("Cancel") { dialog, _ ->
+                        }.setNegativeButton(R.string.cancel) { dialog, _ ->
                             dialog?.dismiss()
                         }.setMessage("Remove file '${file.fileName}'?")
                         .create()
@@ -151,7 +151,7 @@ class EditActivity : AppCompatActivity() {
                 isSoftScan = true
             }
         }
-        dialogFrag.show(supportFragmentManager, "Companion Dialog")
+        dialogFrag.show(supportFragmentManager, getString(R.string.title_companion_dialog))
     }
     private fun onScanClicked() {
         if (scannerStatus == DeviceState.READY && serviceStatus == ConnectionState.CONNECTED) {
@@ -161,7 +161,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
     private fun toggleKeyboardNumeric() {
-        if (abcButton.text.toString() == "123") {
+        if (abcButton.text.toString() == getString(R.string.number_title)) {
             useNumericKeyboard()
         } else {
             useTextKeyboard()
@@ -193,9 +193,9 @@ class EditActivity : AppCompatActivity() {
         fos.close()
 
         val i = Intent(Intent.ACTION_SEND)
-        i.type = "text/plain"
+        i.type = getString(R.string.mime_type_text)
         i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile))
-        val chooser = Intent.createChooser(i, "Share via")
+        val chooser = Intent.createChooser(i, getString(R.string.share_via))
         startActivity(chooser)
     }
 
@@ -266,13 +266,13 @@ class EditActivity : AppCompatActivity() {
             when(error.code) {
                 CaptureError.COMPANION_NOT_INSTALLED -> {
                     val alert = AlertDialog.Builder(this)
-                            .setMessage("Please install companion app.")
-                            .setPositiveButton("OK") { dialog, _ ->
+                            .setMessage(R.string.prompt_install_companion)
+                            .setPositiveButton(R.string.ok) { dialog, _ ->
                                 dialog.dismiss()
 
-                                val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.socketmobile.companion"))
+                                val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.companion_store_url)))
                                 startActivity(i)
-                            }.setNegativeButton("Cancel") { dialog, _ ->
+                            }.setNegativeButton(R.string.cancel) { dialog, _ ->
                                 dialog.dismiss()
                             }.create()
                     alert.show()
