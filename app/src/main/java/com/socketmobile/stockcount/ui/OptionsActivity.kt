@@ -14,6 +14,9 @@ class OptionsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_options)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        var packageInfo = applicationContext.packageManager.getPackageInfo(packageName, 0)
+        var versionInfo = "${getString(R.string.ver_info)} ${packageInfo.versionName}.${packageInfo.versionCode}"
+        verInfoTextView.text = versionInfo
         scanSettingsLayout.setOnClickListener {
             startActivity(Intent(this, ScanSettingsActivity::class.java))
         }
@@ -23,7 +26,7 @@ class OptionsActivity : AppCompatActivity() {
             startActivity(i)
         }
         captureSdkTextView.setOnClickListener {
-            val i = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/SocketMobiles"))
+            val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.sdk_github_url)))
             startActivity(i)
         }
     }

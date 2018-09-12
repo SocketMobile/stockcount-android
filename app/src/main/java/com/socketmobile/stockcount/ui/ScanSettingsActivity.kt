@@ -92,9 +92,9 @@ class ScanSettingsActivity : AppCompatActivity() {
         }
     }
     private fun updatePreview() {
-        var preview = "The result will look like:\n"
-        preview += getLineForBarcode(this, "[barcode]")
-        preview += getLineForBarcode(this, "[barcode]")
+        var preview = getString(R.string.preview_prefix)
+        preview += getLineForBarcode(this, getString(R.string.temp_barcode))
+        preview += getLineForBarcode(this, getString(R.string.temp_barcode))
         previewTextView.text = preview
     }
 
