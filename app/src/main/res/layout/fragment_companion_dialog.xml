@@ -21,14 +21,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Socket scanner is connected."
+        android:text="@string/no_connected_socket_scanner"
         android:textColor="@android:color/black"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="Make sure your scanner is powered\non and connected in Application\nMode."
+        android:text="@string/make_sure_your_scanner_is_on"
         android:textColor="@android:color/black"/>
     <Button
         android:id="@+id/tryAgainButton"
@@ -38,14 +38,14 @@
         android:backgroundTint="@color/button_blue"
         android:paddingLeft="60dp"
         android:paddingRight="60dp"
-        android:text="Try Again"
+        android:text="@string/try_again"
         android:textColor="@android:color/white"/>
     <TextView
         android:id="@+id/launchCompanionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Launch Companion to connect in\nApplication Mode"
+        android:text="@string/launch_companion"
         android:textColor="@color/button_blue"/>
     <TextView
         android:layout_width="wrap_content"
@@ -53,12 +53,12 @@
         android:layout_marginTop="8dp"
         android:textColor="@android:color/black"
         android:gravity="center"
-        android:text="If you continue without a connected\nscanner, the app will launch the\ncamera on your device for\nscanning."/>
+        android:text="@string/prompt_launch_the_camera"/>
     <TextView
         android:id="@+id/useCameraTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="@color/button_blue"
-        android:text="Use Camera"/>
+        android:text="@string/use_camera"/>
 </LinearLayout>

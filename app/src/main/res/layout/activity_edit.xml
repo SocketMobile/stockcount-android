@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/gray_rounded_normal"
-            android:text="SCAN"/>
+            android:text="@string/scan"/>
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/gray_rounded_normal"
-            android:text="ABC"/>
+            android:text="@string/alpha_title"/>
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -56,6 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/gray_rounded_normal"
-            android:text="SCAN"/>
+            android:text="@string/scan"/>
     </LinearLayout>
 </RelativeLayout>

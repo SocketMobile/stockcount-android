@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/addFile"
-        android:title="Add File"
+        android:title="@string/add_file"
         android:icon="@drawable/btn_new" />
     <item
         android:id="@+id/showOptions"
-        android:title="Options"
+        android:title="@string/options"
         android:icon="@drawable/btn_option" />
 </menu>
