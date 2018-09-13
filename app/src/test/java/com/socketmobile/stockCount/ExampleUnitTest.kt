@@ -1,4 +1,4 @@
-package com.socketmobile.stockcount
+package com.socketmobile.stockCount
 
 import org.junit.Test
 

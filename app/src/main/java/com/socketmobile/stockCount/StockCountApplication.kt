@@ -1,11 +1,12 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockcount
+package com.socketmobile.stockCount
 
 import android.app.Application
 import android.os.Environment
 import com.crashlytics.android.Crashlytics
 import com.socketmobile.capture.android.Capture
+import com.socketmobile.stockCount.BuildConfig
 import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import java.io.File

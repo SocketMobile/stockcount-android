@@ -1,6 +1,6 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockcount.ui
+package com.socketmobile.stockCount.ui
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -13,8 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.socketmobile.stockcount.R
-import com.socketmobile.stockcount.helper.shownInstruction
+import com.socketmobile.stockCount.R
+import com.socketmobile.stockCount.helper.shownInstruction
 import kotlinx.android.synthetic.main.activity_instruction.*
 
 class InstructionActivity : AppCompatActivity() {
