@@ -1,4 +1,4 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockcount.helper
+package com.socketmobile.stockCount.helper
 

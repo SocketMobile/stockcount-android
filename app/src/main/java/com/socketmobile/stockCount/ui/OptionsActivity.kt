@@ -1,12 +1,12 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockcount.ui
+package com.socketmobile.stockCount.ui
 
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.socketmobile.stockcount.R
+import com.socketmobile.stockCount.R
 import kotlinx.android.synthetic.main.activity_options.*
 
 class OptionsActivity : AppCompatActivity() {

@@ -1,6 +1,6 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockcount.ui
+package com.socketmobile.stockCount.ui
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -9,9 +9,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
-import com.socketmobile.stockcount.R
-import com.socketmobile.stockcount.helper.createFile
-import com.socketmobile.stockcount.helper.getFiles
+import com.socketmobile.stockCount.R
+import com.socketmobile.stockCount.helper.createFile
+import com.socketmobile.stockCount.helper.getFiles
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -57,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
     class FilesAdapter: RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
         private val files = getFiles()
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesAdapter.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val fileView = inflater.inflate(R.layout.view_file, parent, false)
 
@@ -68,7 +68,7 @@ class HomeActivity : AppCompatActivity() {
             return files.size
         }
 
-        override fun onBindViewHolder(holder: FilesAdapter.ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = files[position]
             holder.nameTextView?.text = item?.fileTitle
             holder.contentTextView?.text = item?.firstScan

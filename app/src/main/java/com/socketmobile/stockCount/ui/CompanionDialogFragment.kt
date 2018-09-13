@@ -1,6 +1,6 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockcount.ui
+package com.socketmobile.stockCount.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.socketmobile.stockcount.R
+import com.socketmobile.stockCount.R
 import kotlinx.android.synthetic.main.fragment_companion_dialog.*
 
 

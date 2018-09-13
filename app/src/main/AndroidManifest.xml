@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.socketmobile.stockcount">
+    package="com.socketmobile.stockCount">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -68,7 +68,7 @@
             android:value="0e60c6e2630a95eabe20c0d6c0150c456051d523" />
 
         <provider
-            android:authorities="com.socketmobile.stockcount.fileProvider"
+            android:authorities="com.socketmobile.stockCount.fileProvider"
             android:name="android.support.v4.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
