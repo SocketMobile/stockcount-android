@@ -130,7 +130,7 @@ fun getLineForBarcode(c: Context, barcode: String? = null): String {
     }
 
     val newLineSymbol = if (isAddNewLine(c)) "\n" else ";"
-    retValue = if (barcode.isNullOrEmpty()) {
+    retValue = if (!barcode.isNullOrEmpty()) {
         newLineSymbol + retValue
     } else {
         retValue + newLineSymbol
