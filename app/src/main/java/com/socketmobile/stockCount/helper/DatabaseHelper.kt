@@ -29,7 +29,7 @@ fun createFile(c: Context): String {
     realm.executeTransaction {
         val obj = realm.createObject(RMFile::class.java, fileName)
         obj.fileTitle = fileTitle
-        obj.fileContent = fileTitle
+        obj.fileContent = fileTitle + "\n"
     }
 
     return fileName
