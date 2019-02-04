@@ -81,7 +81,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+        class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val nameTextView = itemView?.findViewById<TextView>(R.id.fileTitleTextView)
             val contentTextView = itemView?.findViewById<TextView>(R.id.scanContentTextView)
         }
