@@ -58,7 +58,7 @@ class OptionsActivity : AppCompatActivity() {
             progressDialog.show()
             val country = Locale.getDefault().country
 
-            if (country == Locale.CHINA.country) {
+            if (country == Locale.CHINA.country) { // special case check for china, because there's no china link on refersion
                 openLink(ChinaLink)
                 return@setOnClickListener
             }
