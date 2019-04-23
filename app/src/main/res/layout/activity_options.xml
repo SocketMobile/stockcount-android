@@ -107,4 +107,14 @@
             android:text="@string/capture_sdk"
             android:textColor="@android:color/holo_blue_light"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buyScannerButton"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/blue_rounded_normal"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:text="@string/buy_scanner"/>
 </LinearLayout>

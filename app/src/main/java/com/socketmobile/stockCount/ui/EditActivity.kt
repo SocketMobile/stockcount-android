@@ -198,7 +198,7 @@ class EditActivity : AppCompatActivity() {
         fos.close()
 
         val i = Intent(Intent.ACTION_SEND)
-        i.type = getString(R.string.mime_type_text)
+        i.type = "text/plain"
         i.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, applicationContext.packageName + ".fileProvider", tempFile))
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val chooser = Intent.createChooser(i, getString(R.string.share_via))
