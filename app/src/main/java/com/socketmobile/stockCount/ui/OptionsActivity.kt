@@ -58,7 +58,7 @@ class OptionsActivity : AppCompatActivity() {
             progressDialog.show()
             val country = Locale.getDefault().country
 
-            if (country == "CN") {
+            if (country == Locale.CHINA.country) {
                 openLink(ChinaLink)
                 return@setOnClickListener
             }
