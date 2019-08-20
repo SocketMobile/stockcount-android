@@ -19,10 +19,13 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.method.TextKeyListener
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import com.socketmobile.capture.CaptureError
 import com.socketmobile.capture.android.Capture
 import com.socketmobile.capture.android.events.ConnectionStateEvent
@@ -30,6 +33,7 @@ import com.socketmobile.capture.client.*
 import com.socketmobile.stockCount.R
 import com.socketmobile.stockCount.helper.*
 import com.socketmobile.stockCount.model.RMFile
+import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit.*
 import org.greenrobot.eventbus.Subscribe
@@ -42,7 +46,7 @@ class EditActivity : AppCompatActivity() {
     lateinit var file: RMFile
     private var captureClient: CaptureClient? = null
     private var serviceStatus = ConnectionState.DISCONNECTED
-    private val tag = EditActivity::class.java.name!!
+    private val tag = EditActivity::class.java.name
     private val deviceStateMap = HashMap<String, DeviceState>()
     private val deviceClientMap = HashMap<String, DeviceClient>()
 
@@ -106,7 +110,7 @@ class EditActivity : AppCompatActivity() {
                             finish()
                         }.setNegativeButton(R.string.cancel) { dialog, _ ->
                             dialog?.dismiss()
-                        }.setMessage("Remove file '${file.fileName}'?")
+                        }.setMessage("Remove file '${getFileNameWithExt(this, file)}'?")
                         .create()
                 dialog.show()
             }
@@ -145,6 +149,17 @@ class EditActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Answers.getInstance().logCustom(CustomEvent("ONKEYDOWN$keyCode")
+                .putCustomAttribute("KEYCODE$keyCode", keyCode))
+        when(keyCode) {
+            KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
+                onScanClicked()
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
     private fun showCompanionDialog() {
         val dialogFrag = CompanionDialogFragment()
         dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
@@ -192,9 +207,14 @@ class EditActivity : AppCompatActivity() {
 
     private fun shareContent() {
         clearStockCountDir()
-        val tempFile = File(getStockCountDir(), file.fileName)
+        val tempFile = File(getStockCountDir(), getFileNameWithExt(this, file))
+        tempFile.deleteOnExit()
         val fos = FileOutputStream(tempFile)
-        fos.write(file.fileContent.toByteArray())
+        if (isConsolidatingCounts(this)) {
+            fos.write(getCountsAggregatedContent(this, file).toByteArray())
+        } else {
+            fos.write(file.fileContent.toByteArray())
+        }
         fos.close()
 
         val i = Intent(Intent.ACTION_SEND)
