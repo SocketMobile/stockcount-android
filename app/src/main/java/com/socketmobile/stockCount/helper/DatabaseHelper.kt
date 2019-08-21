@@ -96,11 +96,14 @@ fun getCountsAggregatedContent(c: Context, file: RMFile): String {
                 it.split(" ")
             }
             if (components.isNotEmpty()) {
-                val barcode = components[0].trim()
-                val count : Int = if (components.size > 1) {
-                    components[1].trim().toIntOrNull() ?: 1
+                val barcodeIndex = 0
+                val countIndex = 1
+                val defaultCount = 1
+                val barcode = components[barcodeIndex].trim()
+                val count : Int = if (components.size > countIndex) {
+                    components[countIndex].trim().toIntOrNull() ?: defaultCount
                 } else {
-                    1
+                    defaultCount
                 }
                 if (barcode.isNotEmpty()) {
                     if (barcodeList.contains(barcode)) {
