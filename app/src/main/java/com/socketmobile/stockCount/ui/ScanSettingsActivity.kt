@@ -22,6 +22,7 @@ class ScanSettingsActivity : AppCompatActivity() {
         updateNewScanComponents()
         vibrateSwitch.isChecked = isVibrationOnScan(this)
         supportD600Switch.isChecked = isD600Support(this)
+        consolidatingCountsSwitch.isChecked = isConsolidatingCounts(this)
 
         minusQuantityButton.setOnClickListener {
             var quantity = Integer.parseInt(defaultQuantityTextView.text.toString())
@@ -71,6 +72,10 @@ class ScanSettingsActivity : AppCompatActivity() {
         semiColonCheckLayout.setOnClickListener {
             setAddNewLine(this, false)
             updateNewScanComponents()
+            updatePreview()
+        }
+        consolidatingCountsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            setConsolidatingCounts(this, isChecked)
             updatePreview()
         }
         updatePreview()

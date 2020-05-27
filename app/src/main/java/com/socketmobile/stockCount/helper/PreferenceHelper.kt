@@ -15,6 +15,7 @@ const val NEW_LINE_KEY = "NewLineForNewScan"
 const val VIBRATION_KEY = "VibrationOnScan"
 const val SCAN_DATE_KEY = "ScanDate"
 const val SCAN_COUNT_KEY = "ScanCount"
+const val CONSOLIDATING_COUNTS = "ConsolidatingCounts"
 
 const val DEFAULT_AUTO_ADD_QUANTITY = true
 const val DEFAULT_D600_SUPPORT = false
@@ -24,6 +25,7 @@ const val DEFAULT_NEW_LINE = true
 const val DEFAULT_VIBRATION_ON_SCAN = false
 const val DEFAULT_SCAN_DATE = ""
 const val DEFAULT_SCAN_COUNT = 0
+const val DEFAULT_CONSOLIDATING_COUNTS = true
 
 fun haveToShowInstruction(c: Context): Boolean {
     val sp = PreferenceManager.getDefaultSharedPreferences(c)
@@ -95,6 +97,15 @@ fun isVibrationOnScan(c: Context): Boolean {
 fun setVibrationOnScan(c: Context, value: Boolean) {
     val editor = PreferenceManager.getDefaultSharedPreferences(c).edit()
     editor.putBoolean(VIBRATION_KEY, value)
+    editor.apply()
+}
+
+fun isConsolidatingCounts(c: Context): Boolean {
+    return PreferenceManager.getDefaultSharedPreferences(c).getBoolean(CONSOLIDATING_COUNTS, DEFAULT_CONSOLIDATING_COUNTS)
+}
+fun setConsolidatingCounts(c: Context, value: Boolean) {
+    val editor = PreferenceManager.getDefaultSharedPreferences(c).edit()
+    editor.putBoolean(CONSOLIDATING_COUNTS, value)
     editor.apply()
 }
 

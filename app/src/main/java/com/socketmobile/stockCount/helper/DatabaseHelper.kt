@@ -23,7 +23,7 @@ fun createFile(c: Context): String {
     setScanCount(c, scanCount)
 
     val fileTitle = "Inventory Scan - ${getFullDateString(now)}-$scanCount"
-    val fileName = "InventoryScan_${getDateStringWithoutWild(now)}.txt"
+    val fileName = "InventoryScan_${getDateStringWithoutWild(now)}"
 
     val realm = Realm.getDefaultInstance()
     realm.executeTransaction {
@@ -71,4 +71,56 @@ fun getStockCountDir(): File {
 
 fun clearStockCountDir() {
     getStockCountDir().deleteOnExit()
+}
+
+fun getFileNameWithExt(c: Context, file: RMFile): String {
+    return if (isConsolidatingCounts(c)) {
+        "${file.fileName}.csv"
+    } else {
+        "${file.fileName}.txt"
+    }
+}
+
+fun getCountsAggregatedContent(c: Context, file: RMFile): String {
+    var content = file.fileContent
+    val lines = content.split("\n")
+    if (lines.isNotEmpty()) {
+        var contentLines = lines.toMutableList()
+        contentLines.removeAt(0)
+        var barcodeList = mutableListOf<String>()
+        var barcodeCountMap = mutableMapOf<String, Int>()
+        contentLines.joinToString(";").split(";").forEach {
+            var components = if (it.contains(",")) {
+                it.split(",")
+            } else {
+                it.split(" ")
+            }
+            if (components.isNotEmpty()) {
+                val barcodeIndex = 0
+                val countIndex = 1
+                val defaultCount = 1
+                val barcode = components[barcodeIndex].trim()
+                val count : Int = if (components.size > countIndex) {
+                    components[countIndex].trim().toIntOrNull() ?: defaultCount
+                } else {
+                    defaultCount
+                }
+                if (barcode.isNotEmpty()) {
+                    if (barcodeList.contains(barcode)) {
+                        barcodeCountMap[barcode] = barcodeCountMap[barcode]!! + count
+                    } else {
+                        barcodeList.add(barcode)
+                        barcodeCountMap[barcode] = count
+                    }
+                }
+            }
+        }
+        content = "${lines[0]}\n"
+        barcodeList.forEach { barcode ->
+            val count = barcodeCountMap[barcode]
+            content += "$barcode, $count\n"
+        }
+    }
+
+    return content
 }
