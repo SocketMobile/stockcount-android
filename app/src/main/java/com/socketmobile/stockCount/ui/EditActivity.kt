@@ -24,8 +24,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
 import com.socketmobile.capture.CaptureError
 import com.socketmobile.capture.android.Capture
 import com.socketmobile.capture.android.events.ConnectionStateEvent
@@ -33,7 +31,6 @@ import com.socketmobile.capture.client.*
 import com.socketmobile.stockCount.R
 import com.socketmobile.stockCount.helper.*
 import com.socketmobile.stockCount.model.RMFile
-import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit.*
 import org.greenrobot.eventbus.Subscribe
@@ -150,8 +147,6 @@ class EditActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Answers.getInstance().logCustom(CustomEvent("ONKEYDOWN$keyCode")
-                .putCustomAttribute("KEYCODE$keyCode", keyCode))
         when(keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
                 onScanClicked()

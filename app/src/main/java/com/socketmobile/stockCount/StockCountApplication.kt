@@ -4,21 +4,27 @@ package com.socketmobile.stockCount
 
 import android.app.Application
 import android.os.Environment
-import com.crashlytics.android.Crashlytics
+import android.util.Log
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import com.socketmobile.capture.android.Capture
-import com.socketmobile.stockCount.BuildConfig
-import io.fabric.sdk.android.Fabric
 import io.realm.Realm
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.IOException
-
+import java.util.*
 
 
 class StockCountApplication: Application() {
     override fun onCreate() {
         super.onCreate()
+
+        AppCenter.start(this, BuildConfig.APP_CENTER_KEY,
+                    Analytics::class.java, Crashes::class.java)
+
         Realm.init(applicationContext)
-        Fabric.with(this, Crashlytics())
 
         Capture.builder(applicationContext)
                 .enableLogging(BuildConfig.DEBUG)
