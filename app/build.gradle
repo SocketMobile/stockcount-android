@@ -6,7 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'realm-android'
-apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -29,6 +28,8 @@ android {
             def gitVersion = getGitVersion()
             return gitVersion.replace("-", ".")
         }
+
+        buildConfigField "String", "APP_CENTER_KEY", "\""+getUsername()+"\""
 
         applicationId "com.socketmobile.stockCount"
         minSdkVersion 21
@@ -56,7 +57,16 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true
-    }
+
+    def appCenterSdkVersion = '3.3.1'
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+
+    testImplementation 'junit:junit:4.12'
+}
+
+def getUsername() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("app_center_key");
 }
