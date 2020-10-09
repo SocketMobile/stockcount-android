@@ -1,7 +1,7 @@
 # README #
 
 
-This repository contains the source code of the Stock Count app by Socket Mobile for Android. The Stock Count app is published on [Google Play Store](https://play.google.com/store/apps/details?id=com.socketmobile.stockCount). 
+This repository contains the source code of the Stock Count app by Socket Mobile for Android. The Stock Count app is published on [Google Play Store](https://play.google.com/store/apps/details?id=stockcount).
 
 Stock Count is a utility app that helps Socket Mobile customers for routine stock/inventory counting jobs, using Socket Mobile barcode scanners' high speed scanning capability. It allows user to quickly scan multiple SKUs in "rapid fire" fashion. The scanned data will be written into a editable text file, with quantity information automatically added to each scan. User will be able to share the file (.txt format) and import it into most inventory management systems. 
 

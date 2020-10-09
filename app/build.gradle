@@ -31,7 +31,7 @@ android {
 
         buildConfigField "String", "APP_CENTER_KEY", "\""+getUsername()+"\""
 
-        applicationId "com.socketmobile.stockCount"
+        applicationId "com.socketmobile.stockcount"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode getVersionCode()

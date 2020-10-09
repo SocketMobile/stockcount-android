@@ -1,7 +1,6 @@
-package com.socketmobile.stockCount.service
+package com.socketmobile.stockcount.service
 
-import com.socketmobile.stockCount.model.Affiliate
-import okhttp3.RequestBody
+import com.socketmobile.stockcount.model.Affiliate
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

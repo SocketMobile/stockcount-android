@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.socketmobile.stockCount">
+    package="com.socketmobile.stockcount">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -27,9 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".StockCountApplication">
+        android:name="com.socketmobile.stockcount.StockCountApplication">
         <activity
-            android:name=".ui.SplashActivity"
+            android:name="com.socketmobile.stockcount.ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,23 +38,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.InstructionActivity"
+            android:name="com.socketmobile.stockcount.ui.InstructionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.HomeActivity"
+            android:name="com.socketmobile.stockcount.ui.HomeActivity"
             android:label="All Files"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.EditActivity"
+            android:name="com.socketmobile.stockcount.ui.EditActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".ui.OptionsActivity"
+            android:name="com.socketmobile.stockcount.ui.OptionsActivity"
             android:label=""
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ScanSettingsActivity"
+            android:name="com.socketmobile.stockcount.ui.ScanSettingsActivity"
             android:label="Scan Settings"
             android:screenOrientation="portrait" />
 
@@ -66,7 +66,7 @@
             android:value="@string/developer_id"/>
 
         <provider
-            android:authorities="com.socketmobile.stockCount.fileProvider"
+            android:authorities="com.socketmobile.stockcount.fileProvider"
             android:name="android.support.v4.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">

@@ -1,20 +1,16 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount
+package com.socketmobile.stockcount
 
 import android.app.Application
 import android.os.Environment
-import android.util.Log
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import com.socketmobile.capture.android.Capture
 import io.realm.Realm
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.*
 
 
 class StockCountApplication: Application() {

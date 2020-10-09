@@ -1,6 +1,6 @@
-package com.socketmobile.stockCount.helper
+package com.socketmobile.stockcount.helper
 
-import com.socketmobile.stockCount.model.GetAffParam
+import com.socketmobile.stockcount.model.GetAffParam
 
 val ChinaLink = "https://www.amazon.cn/dp/B01N8SQ8MU/ref=sr_1_7?__mk_zh_CN=%E4%BA%9A%E9%A9%AC%E9%80%8A%E7%BD%91%E7%AB%99&keywords=socket+mobile&qid=1555606674&s=gateway&sr=8-7"
 val EuroCodes = arrayOf("AL", "AD", "AM", "AT", "BY", "BE", "BA", "BG", "CH", "CY", "CZ", "DE", "DK", "EE", "ES", "FO", "FI", "FR", "GE", "GI", "GR", "HU", "HR", "IE", "IS", "IT", "LT", "LU", "LV", "MC", "MK", "MT", "NO", "NL", "PO", "PT")

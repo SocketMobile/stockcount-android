@@ -1,4 +1,4 @@
-package com.socketmobile.stockCount.model
+package com.socketmobile.stockcount.model
 
 class Affiliate {
     constructor(offer_id: String) {

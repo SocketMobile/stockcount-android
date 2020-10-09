@@ -1,12 +1,12 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.ui
+package com.socketmobile.stockcount.ui
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.socketmobile.stockCount.R
-import com.socketmobile.stockCount.helper.haveToShowInstruction
+import com.socketmobile.stockcount.R
+import com.socketmobile.stockcount.helper.haveToShowInstruction
 import java.util.*
 
 class SplashActivity : AppCompatActivity() {

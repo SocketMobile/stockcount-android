@@ -1,6 +1,6 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.ui
+package com.socketmobile.stockcount.ui
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
@@ -9,14 +9,12 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.socketmobile.stockCount.R
-import com.socketmobile.stockCount.helper.ChinaLink
-import com.socketmobile.stockCount.helper.getRefersionKey
-import com.socketmobile.stockCount.model.Affiliate
-import com.socketmobile.stockCount.service.RefersionService
+import com.socketmobile.stockcount.R
+import com.socketmobile.stockcount.helper.ChinaLink
+import com.socketmobile.stockcount.helper.getRefersionKey
+import com.socketmobile.stockcount.model.Affiliate
+import com.socketmobile.stockcount.service.RefersionService
 import kotlinx.android.synthetic.main.activity_options.*
-import okhttp3.RequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
