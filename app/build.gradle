@@ -21,10 +21,12 @@ android {
             return gitDescribe.substring(0, gitDescribe.lastIndexOf("-"))
         }
         def getVersionCode = { ->
-            def gitVersion = getGitVersion()
-            return Integer.parseInt(gitVersion.replace(".", "").replace("-", ""))
+            def gitVersion = getGitVersion().replace("-", ".")
+            String[] version = gitVersion.split('\\.')
+            int versionCode = Integer.parseInt(version[0]) * 1000000 + Integer.parseInt(version[1]) * 10000 + Integer.parseInt(version[2])
+            return versionCode
         }
-        def getVersionNam = {
+        def getVersionName = {
             def gitVersion = getGitVersion()
             return gitVersion.replace("-", ".")
         }
@@ -35,7 +37,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode getVersionCode()
-        versionName getVersionNam()
+        versionName getVersionName()
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
