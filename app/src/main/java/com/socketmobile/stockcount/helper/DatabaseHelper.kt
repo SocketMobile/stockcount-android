@@ -1,10 +1,10 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.helper
+package com.socketmobile.stockcount.helper
 
 import android.content.Context
 import android.os.Environment
-import com.socketmobile.stockCount.model.RMFile
+import com.socketmobile.stockcount.model.RMFile
 import io.realm.Realm
 import io.realm.RealmResults
 import java.io.File

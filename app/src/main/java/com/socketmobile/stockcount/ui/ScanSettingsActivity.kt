@@ -1,12 +1,11 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.ui
+package com.socketmobile.stockcount.ui
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.socketmobile.stockCount.helper.*
-import com.socketmobile.stockCount.R
-import com.socketmobile.stockCount.helper.*
+import com.socketmobile.stockcount.helper.*
+import com.socketmobile.stockcount.R
 import kotlinx.android.synthetic.main.activity_scan_settings.*
 
 class ScanSettingsActivity : AppCompatActivity() {

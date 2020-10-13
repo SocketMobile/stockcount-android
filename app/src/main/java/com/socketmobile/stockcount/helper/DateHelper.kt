@@ -1,6 +1,6 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.helper
+package com.socketmobile.stockcount.helper
 
 import java.text.SimpleDateFormat
 import java.util.*

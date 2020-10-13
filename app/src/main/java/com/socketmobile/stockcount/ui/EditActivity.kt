@@ -1,6 +1,6 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.ui
+package com.socketmobile.stockcount.ui
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
@@ -12,11 +12,11 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.text.method.TextKeyListener
 import android.util.Log
 import android.view.KeyEvent
@@ -28,9 +28,9 @@ import com.socketmobile.capture.CaptureError
 import com.socketmobile.capture.android.Capture
 import com.socketmobile.capture.android.events.ConnectionStateEvent
 import com.socketmobile.capture.client.*
-import com.socketmobile.stockCount.R
-import com.socketmobile.stockCount.helper.*
-import com.socketmobile.stockCount.model.RMFile
+import com.socketmobile.stockcount.R
+import com.socketmobile.stockcount.helper.*
+import com.socketmobile.stockcount.model.RMFile
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_edit.*
 import org.greenrobot.eventbus.Subscribe

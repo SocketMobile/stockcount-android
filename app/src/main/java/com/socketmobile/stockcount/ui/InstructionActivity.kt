@@ -1,20 +1,20 @@
 /**  Copyright © 2018 Socket Mobile, Inc. */
 
-package com.socketmobile.stockCount.ui
+package com.socketmobile.stockcount.ui
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.socketmobile.stockCount.R
-import com.socketmobile.stockCount.helper.shownInstruction
+import com.socketmobile.stockcount.R
+import com.socketmobile.stockcount.helper.shownInstruction
 import kotlinx.android.synthetic.main.activity_instruction.*
 
 class InstructionActivity : AppCompatActivity() {
@@ -54,7 +54,7 @@ class InstructionActivity : AppCompatActivity() {
         }
     }
 
-    class InstructionPageFragment: Fragment() {
+    class InstructionPageFragment: androidx.fragment.app.Fragment() {
         var instructionImageResId: Int = 0
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
