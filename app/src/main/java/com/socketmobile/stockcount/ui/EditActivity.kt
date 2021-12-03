@@ -159,6 +159,7 @@ class EditActivity : AppCompatActivity() {
         val dialogFrag = CompanionDialogFragment()
         dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
             override fun onUseCamera() {
+
                 AlertDialog.Builder(this@EditActivity)
                         .setMessage(R.string.feature_will_be_soon)
                         .setPositiveButton(R.string.ok) { dialog, _ ->
@@ -197,7 +198,7 @@ class EditActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = currentFocus
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     private fun shareContent() {
