@@ -51,4 +51,8 @@
     <string name="feature_will_be_soon">This feature will be available soon.</string>
     <string name="buy_scanner">Buy Scanner</string>
     <string name="consolidating_counts_option_label">Consolidating counts before sharing the file</string>
+
+    <string name="turn_on_flashlight">Turn on Flashlight</string>
+    <string name="turn_off_flashlight">Turn off Flashlight</string>
+    <string name="center_the_barcode">Center the barcode in the view to scan</string>
 </resources>

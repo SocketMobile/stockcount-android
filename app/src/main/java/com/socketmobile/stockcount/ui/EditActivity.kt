@@ -12,11 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.text.method.TextKeyListener
 import android.util.Log
 import android.view.KeyEvent
@@ -24,6 +19,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import com.google.zxing.client.android.Intents
 import com.socketmobile.capture.CaptureError
 import com.socketmobile.capture.android.Capture
 import com.socketmobile.capture.android.events.ConnectionStateEvent
@@ -46,6 +48,8 @@ class EditActivity : AppCompatActivity() {
     private val tag = EditActivity::class.java.name
     private val deviceStateMap = HashMap<String, DeviceState>()
     private val deviceClientMap = HashMap<String, DeviceClient>()
+
+    private final val REQUEST_CODE_ZXING_SCAN: Int = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,9 +91,17 @@ class EditActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                ) {
 
                 } else {
                     requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
@@ -99,16 +111,16 @@ class EditActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             R.id.menuDelete -> {
                 val dialog = AlertDialog.Builder(this)
-                        .setPositiveButton(R.string.ok) { _, _ ->
-                            deleteRMFile(file)
-                            finish()
-                        }.setNegativeButton(R.string.cancel) { dialog, _ ->
-                            dialog?.dismiss()
-                        }.setMessage("Remove file '${getFileNameWithExt(this, file)}'?")
-                        .create()
+                    .setPositiveButton(R.string.ok) { _, _ ->
+                        deleteRMFile(file)
+                        finish()
+                    }.setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog?.dismiss()
+                    }.setMessage("Remove file '${getFileNameWithExt(this, file)}'?")
+                    .create()
                 dialog.show()
             }
             R.id.menuSave -> {
@@ -147,7 +159,7 @@ class EditActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        when(keyCode) {
+        when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP -> {
                 onScanClicked()
                 return true
@@ -155,27 +167,35 @@ class EditActivity : AppCompatActivity() {
         }
         return super.onKeyDown(keyCode, event)
     }
+
     private fun showCompanionDialog() {
         val dialogFrag = CompanionDialogFragment()
-        dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
+        dialogFrag.companionDialogListener = object : OnCompanionDialogListener {
             override fun onUseCamera() {
-
-                AlertDialog.Builder(this@EditActivity)
-                        .setMessage(R.string.feature_will_be_soon)
-                        .setPositiveButton(R.string.ok) { dialog, _ ->
-                            dialog.dismiss()
-                        }.create().show()
+                startZxingScannerActivity()
+//                AlertDialog.Builder(this@EditActivity)
+//                        .setMessage(R.string.feature_will_be_soon)
+//                        .setPositiveButton(R.string.ok) { dialog, _ ->
+//                            dialog.dismiss()
+//                        }.create().show()
             }
         }
         dialogFrag.show(supportFragmentManager, getString(R.string.title_companion_dialog))
     }
+
+    private fun startZxingScannerActivity() {
+        val i = Intent(this, ZxingScannerActivity::class.java)
+        startActivityForResult(i, REQUEST_CODE_ZXING_SCAN)
+    }
+
     private fun onScanClicked() {
         if (canTriggerScanner()) {
             triggerDevices()
-        }else {
+        } else {
             showCompanionDialog()
         }
     }
+
     private fun toggleKeyboardNumeric() {
         if (abcButton.text.toString() == getString(R.string.number_title)) {
             useNumericKeyboard()
@@ -183,10 +203,12 @@ class EditActivity : AppCompatActivity() {
             useTextKeyboard()
         }
     }
+
     private fun useTextKeyboard() {
         fileEditText.keyListener = TextKeyListener.getInstance()
         abcButton.text = getString(R.string.number_title)
     }
+
     private fun useNumericKeyboard() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             fileEditText.keyListener = android.text.method.DigitsKeyListener.getInstance(Locale.US)
@@ -195,6 +217,7 @@ class EditActivity : AppCompatActivity() {
         }
         abcButton.text = getString(R.string.alpha_title)
     }
+
     private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = currentFocus
@@ -215,16 +238,25 @@ class EditActivity : AppCompatActivity() {
 
         val i = Intent(Intent.ACTION_SEND)
         i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, applicationContext.packageName + ".fileProvider", tempFile))
+        i.putExtra(
+            Intent.EXTRA_STREAM,
+            FileProvider.getUriForFile(
+                this,
+                applicationContext.packageName + ".fileProvider",
+                tempFile
+            )
+        )
         i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         val chooser = Intent.createChooser(i, getString(R.string.share_via))
         startActivity(chooser)
     }
 
     private fun triggerDevices() {
-        val readyDeviceGuids = deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
-        val readyDevices = deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
-        for(device in readyDevices) {
+        val readyDeviceGuids =
+            deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
+        val readyDevices =
+            deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
+        for (device in readyDevices) {
             device.trigger { error, property ->
                 Log.d(tag, "trigger callback : $error, $property")
             }
@@ -244,15 +276,22 @@ class EditActivity : AppCompatActivity() {
         if (isVibrationOnScan(this)) {
             val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        500,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
             } else {
                 vibrator.vibrate(500)
             }
         }
     }
+
     private fun goToEnd() {
         fileEditText.setSelection(fileEditText.text.toString().length)
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onCaptureDeviceStateChange(event: DeviceStateEvent) {
         val scannerStatus = event.state.intValue()
@@ -260,7 +299,7 @@ class EditActivity : AppCompatActivity() {
         deviceStateMap[deviceGuid] = event.state
         deviceClientMap[deviceGuid] = event.device
 
-        when(scannerStatus) {
+        when (scannerStatus) {
             DeviceState.AVAILABLE -> {
                 Log.d(tag, "Scanner State Available.")
             }
@@ -287,17 +326,20 @@ class EditActivity : AppCompatActivity() {
         if (state.hasError()) {
             val error = state.error
             Log.d(tag, "Error on service connection. Error: ${error.code}, ${error.message}")
-            when(error.code) {
+            when (error.code) {
                 CaptureError.COMPANION_NOT_INSTALLED -> {
                     val alert = AlertDialog.Builder(this)
-                            .setMessage(R.string.prompt_install_companion)
-                            .setPositiveButton(R.string.cancel) { dialog, _ ->
-                                dialog.dismiss()
-                            }.setNegativeButton(R.string.install) { dialog, _ ->
-                                dialog.dismiss()
-                                val i = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.companion_store_url)))
-                                startActivity(i)
-                            }.create()
+                        .setMessage(R.string.prompt_install_companion)
+                        .setPositiveButton(R.string.cancel) { dialog, _ ->
+                            dialog.dismiss()
+                        }.setNegativeButton(R.string.install) { dialog, _ ->
+                            dialog.dismiss()
+                            val i = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(getString(R.string.companion_store_url))
+                            )
+                            startActivity(i)
+                        }.create()
                     alert.show()
                 }
                 CaptureError.SERVICE_NOT_RUNNING -> {
@@ -320,7 +362,7 @@ class EditActivity : AppCompatActivity() {
 
             serviceStatus = state.intValue()
             Log.d(tag, "Service Status is changed to $serviceStatus($state)")
-            when(serviceStatus) {
+            when (serviceStatus) {
                 ConnectionState.CONNECTING -> {
                 }
                 ConnectionState.CONNECTED -> {
@@ -342,12 +384,16 @@ class EditActivity : AppCompatActivity() {
     private fun isServiceConnected(): Boolean {
         return serviceStatus == ConnectionState.READY
     }
+
     private fun isConnectedDevice(): Boolean {
-        return deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.count() > 0
+        return deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }
+            .count() > 0
     }
+
     private fun canTriggerScanner(): Boolean {
         return isServiceConnected() && isConnectedDevice()
     }
+
     private fun updateDeviceButton() {
         runOnUiThread {
             enableDeviceButton(canTriggerScanner())
@@ -356,5 +402,25 @@ class EditActivity : AppCompatActivity() {
 
     private fun enableDeviceButton(enabled: Boolean) {
         deviceButton.isEnabled = enabled
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_ZXING_SCAN) {
+            when {
+                data == null -> {
+                    Log.d(tag, "Scan Cancelled")
+//                    Toast.makeText(this@EditActivity, "Scan Cancelled", Toast.LENGTH_LONG).show()
+                }
+                data.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION) ->
+                    Toast.makeText(this@EditActivity, "Cancelled due to missing camera permission", Toast.LENGTH_LONG).show()
+                else -> {
+                    val scanResult = data.extras?.get("SCAN_RESULT").toString()
+                    val scanFormat = data.extras?.get("SCAN_RESULT_FORMAT").toString()
+                    fileEditText.append(scanResult + "\n")
+                    goToEnd()
+                }
+            }
+        }
     }
 }

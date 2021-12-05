@@ -7,4 +7,5 @@
     <color name="background_gray">#fafafa</color>
     <color name="button_blue">#007AFF</color>
     <color name="button_clicked_blue">#80007AFF</color>
+    <color name="black">#000000</color>
 </resources>

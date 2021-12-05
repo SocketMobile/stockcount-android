@@ -36,8 +36,10 @@ android {
         applicationId "com.socketmobile.stockcount"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode getVersionCode()
-        versionName getVersionName()
+        versionCode 1
+        versionName "1.0.0"
+//        versionCode getVersionCode()
+//        versionName getVersionName()
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
@@ -66,6 +68,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+//    implementation 'androidx.activity:activity-ktx:1.2.2'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation 'androidx.multidex:multidex:2.0.1'
 

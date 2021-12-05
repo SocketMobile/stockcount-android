@@ -16,8 +16,7 @@ import kotlinx.android.synthetic.main.fragment_companion_dialog.*
 class CompanionDialogFragment : DialogFragment() {
     var companionDialogListener: OnCompanionDialogListener? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
         return inflater.inflate(R.layout.fragment_companion_dialog, container, false)
