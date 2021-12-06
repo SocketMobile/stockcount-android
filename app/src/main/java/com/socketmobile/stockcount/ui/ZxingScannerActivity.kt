@@ -18,7 +18,7 @@ import com.journeyapps.barcodescanner.ViewfinderView
 import com.socketmobile.stockcount.R
 import java.util.*
 
-class ZxingScannerActivity: AppCompatActivity(), DecoratedBarcodeView.TorchListener  {
+class ZxingScannerActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListener {
 
     private var capture: CaptureManager? = null
     private var barcodeScannerView: DecoratedBarcodeView? = null
@@ -33,18 +33,15 @@ class ZxingScannerActivity: AppCompatActivity(), DecoratedBarcodeView.TorchListe
         setContentView(R.layout.activity_zxing_scanner)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = "Scan Barcode"
+        title = getString(R.string.title_scan_barcode)
 
         viewfinderView = findViewById(R.id.zxing_viewfinder_view)
-
         switchFlashlightButton = findViewById(R.id.switch_flashlight)
-
         barcodeScannerView = findViewById(R.id.zxing_barcode_scanner)
+
         barcodeScannerView!!.setTorchListener(this)
 
-        if (!hasFlash()) {
-            with(switchFlashlightButton) { this!!.visibility = View.GONE }
-        }
+        if (!hasFlash()) with(switchFlashlightButton) { this!!.visibility = View.GONE }
 
         capture = CaptureManager(this, barcodeScannerView)
         capture!!.initializeFromIntent(intent, savedInstanceState)
@@ -56,9 +53,17 @@ class ZxingScannerActivity: AppCompatActivity(), DecoratedBarcodeView.TorchListe
 
     override fun onResume() {
         super.onResume()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.CAMERA
+                    )
+                ) {
 
                 } else {
                     requestPermissions(arrayOf(Manifest.permission.CAMERA), 176)
@@ -89,16 +94,12 @@ class ZxingScannerActivity: AppCompatActivity(), DecoratedBarcodeView.TorchListe
     }
 
     private fun hasFlash(): Boolean {
-        return applicationContext.packageManager
-            .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
+        return applicationContext.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
     }
 
     fun switchFlashlight(view: View?) {
-        if (flashOn) {
-            barcodeScannerView!!.setTorchOff()
-        } else {
-            barcodeScannerView!!.setTorchOn()
-        }
+        if (flashOn) barcodeScannerView!!.setTorchOff()
+        else barcodeScannerView!!.setTorchOn()
     }
 
     private fun changeMaskColor(view: View?) {
@@ -124,7 +125,8 @@ class ZxingScannerActivity: AppCompatActivity(), DecoratedBarcodeView.TorchListe
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         capture!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
