@@ -197,7 +197,9 @@ class EditActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = currentFocus
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     private fun shareContent() {
