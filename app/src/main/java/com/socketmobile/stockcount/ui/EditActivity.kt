@@ -201,8 +201,11 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun shareContent() {
-        clearStockCountDir()
-        val tempFile = File(getStockCountDir(), getFileNameWithExt(this, file))
+        val stockCountDir = File(cacheDir, "StockCount")
+        if (!stockCountDir.exists()) {
+            stockCountDir.mkdirs()
+        }
+        val tempFile = File(stockCountDir, getFileNameWithExt(this, file))
         tempFile.deleteOnExit()
         val fos = FileOutputStream(tempFile)
         if (isConsolidatingCounts(this)) {
