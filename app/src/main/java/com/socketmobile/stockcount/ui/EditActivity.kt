@@ -171,37 +171,37 @@ class EditActivity : AppCompatActivity() {
         dialogFrag.show(supportFragmentManager, getString(R.string.title_companion_dialog))
     }
     private fun startSocketCamExtension() {
-        if (captureClient != null) {
-            captureExtension = CaptureExtension.Builder()
-                    .setContext(this)
-                    .setClientHandle(captureClient!!.handle)
-                    .setExtensionScope(ExtensionScope.LOCAL)
-                    .setListener(object: CaptureExtension.Listener {
-                        override fun onExtensionStateChanged(connectionState: ConnectionState?) {
-                            Log.d(tag, "Extension State Changed : ${connectionState?.intValue()}")
-                            if (connectionState?.intValue() == ConnectionState.CONNECTED) {
-                                socketCamDeviceReadyListener = object: SocketCamDeviceReadyListener {
-                                    override fun onSocketCamDeviceReady() {
-                                        triggerDevices()
-                                    }
-                                }
-                                captureClient!!.setSocketCamStatus(SocketCamStatus.ENABLE) {err, property ->
-                                    if (err != null) {
-                                        Log.d(tag, "Failed setSocketCamStatus ${err.message}")
-                                    }
-                                }
-                            }
-                        }
+        val client = captureClient ?: return
 
-                        override fun onError(error: CaptureError?) {
-                            if (error != null) {
-                                Log.d(tag, "Error on start Capture Extension: ${error.message}")
+        captureExtension = CaptureExtension.Builder()
+                .setContext(this)
+                .setClientHandle(client.handle)
+                .setExtensionScope(ExtensionScope.LOCAL)
+                .setListener(object: CaptureExtension.Listener {
+                    override fun onExtensionStateChanged(connectionState: ConnectionState?) {
+                        Log.d(tag, "Extension State Changed : ${connectionState?.intValue()}")
+                        if (connectionState?.intValue() == ConnectionState.CONNECTED) {
+                            socketCamDeviceReadyListener = object: SocketCamDeviceReadyListener {
+                                override fun onSocketCamDeviceReady() {
+                                    triggerDevices()
+                                }
+                            }
+                            client.setSocketCamStatus(SocketCamStatus.ENABLE) {err, property ->
+                                if (err != null) {
+                                    Log.d(tag, "Failed setSocketCamStatus ${err.message}")
+                                }
                             }
                         }
-                    })
-                    .build()
-            captureExtension?.start()
-        }
+                    }
+
+                    override fun onError(error: CaptureError?) {
+                        if (error != null) {
+                            Log.d(tag, "Error on start Capture Extension: ${error.message}")
+                        }
+                    }
+                })
+                .build()
+        captureExtension?.start()
     }
 
     private fun stopSocketCamExtension() {
