@@ -261,8 +261,10 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun triggerDevices() {
-        val readyDeviceGuids = deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
-        val readyDevices = deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
+        val readyDevices = deviceStateMap
+                .filter { it.value.intValue() == DeviceState.READY }.keys
+                .mapNotNull { deviceClientMap[it] }
+
         var bluetoothReaders = readyDevices.filter { entry -> !entry.isSocketCamDevice() }
         var socketCamDevices = readyDevices.filter { entry -> entry.isSocketCamDevice() }
         if (bluetoothReaders.count() > 0) {
