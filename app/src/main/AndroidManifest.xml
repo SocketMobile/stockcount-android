@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.socketmobile.stockcount">
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -65,6 +66,9 @@
             android:name="com.socketmobile.capture.DEVELOPER_ID"
             android:value="@string/developer_id"/>
 
+        <receiver android:name="com.socketmobile.capture.socketcam.client.CaptureExtension$ConnectionStateReceiver"
+            android:exported="true"
+            tools:replace="android:exported" />
         <provider
             android:authorities="com.socketmobile.stockcount.fileProvider"
             android:name="androidx.core.content.FileProvider"
