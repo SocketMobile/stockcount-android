@@ -172,6 +172,11 @@ class EditActivity : AppCompatActivity() {
     }
     private fun startSocketCamExtension() {
         val client = captureClient ?: return
+        socketCamDeviceReadyListener = object: SocketCamDeviceReadyListener {
+            override fun onSocketCamDeviceReady() {
+                triggerDevices()
+            }
+        }
 
         captureExtension = CaptureExtension.Builder()
                 .setContext(this)
@@ -181,11 +186,6 @@ class EditActivity : AppCompatActivity() {
                     override fun onExtensionStateChanged(connectionState: ConnectionState?) {
                         Log.d(tag, "Extension State Changed : ${connectionState?.intValue()}")
                         if (connectionState?.intValue() == ConnectionState.CONNECTED) {
-                            socketCamDeviceReadyListener = object: SocketCamDeviceReadyListener {
-                                override fun onSocketCamDeviceReady() {
-                                    triggerDevices()
-                                }
-                            }
                             client.setSocketCamStatus(SocketCamStatus.ENABLE) {err, property ->
                                 if (err != null) {
                                     Log.d(tag, "Failed setSocketCamStatus ${err.message}")
