@@ -33,16 +33,14 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item != null) {
-            when(item.itemId) {
-                R.id.addFile -> {
-                    goEditActivity(createFile(this))
-                }
-                R.id.showOptions -> {
-                    val i = Intent(this, OptionsActivity::class.java)
-                    startActivity(i)
-                }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.addFile -> {
+                goEditActivity(createFile(this))
+            }
+            R.id.showOptions -> {
+                val i = Intent(this, OptionsActivity::class.java)
+                startActivity(i)
             }
         }
         return super.onOptionsItemSelected(item)

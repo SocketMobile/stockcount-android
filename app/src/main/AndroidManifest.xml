@@ -31,7 +31,8 @@
         android:name="com.socketmobile.stockcount.StockCountApplication">
         <activity
             android:name="com.socketmobile.stockcount.ui.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
