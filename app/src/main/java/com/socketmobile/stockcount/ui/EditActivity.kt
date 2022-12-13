@@ -263,8 +263,8 @@ class EditActivity : AppCompatActivity() {
     private fun triggerDevices() {
         val readyDeviceGuids = deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
         val readyDevices = deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
-        var bluetoothReaders = readyDevices.filter { entry -> !isSocketCamDevice(entry.deviceName) }
-        var socketCamDevices = readyDevices.filter { entry -> isSocketCamDevice(entry.deviceName) }
+        var bluetoothReaders = readyDevices.filter { entry -> !entry.isSocketCamDevice() }
+        var socketCamDevices = readyDevices.filter { entry -> entry.isSocketCamDevice() }
         if (bluetoothReaders.count() > 0) {
             for(device in bluetoothReaders) {
                 device.trigger { error, property ->
@@ -309,7 +309,7 @@ class EditActivity : AppCompatActivity() {
         deviceStateMap[deviceGuid] = state
         deviceClientMap[deviceGuid] = device
 
-        if (!isSocketCamDevice(device.deviceName)) {
+        if (!device.isSocketCamDevice()) {
             stopSocketCamExtension()
         }
         Log.d(tag, "Scanner : ${device.deviceName} - ${device.deviceGuid}")
