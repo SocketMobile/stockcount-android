@@ -110,7 +110,7 @@ fun setConsolidatingCounts(c: Context, value: Boolean) {
 }
 
 fun getScanDate(c: Context): String {
-    return PreferenceManager.getDefaultSharedPreferences(c).getString(SCAN_DATE_KEY, DEFAULT_SCAN_DATE)
+    return PreferenceManager.getDefaultSharedPreferences(c).getString(SCAN_DATE_KEY, DEFAULT_SCAN_DATE)!!
 }
 
 fun setScanDate(c: Context, value: String) {
