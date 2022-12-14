@@ -20,7 +20,7 @@ allprojects {
         google()
         jcenter()
         maven {
-            url "https://bin.socketmobile.com/repo/snapshots"
+            url "https://bin.socketmobile.com/repo/releases"
         }
     }
 }

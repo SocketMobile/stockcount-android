@@ -25,9 +25,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.socketmobile.capture.CaptureError
+import com.socketmobile.capture.SocketCamStatus
 import com.socketmobile.capture.android.Capture
 import com.socketmobile.capture.android.events.ConnectionStateEvent
 import com.socketmobile.capture.client.*
+import com.socketmobile.capture.client.callbacks.PropertyCallback
+import com.socketmobile.capture.socketcam.client.CaptureExtension
+import com.socketmobile.capture.troy.ExtensionScope
 import com.socketmobile.stockcount.R
 import com.socketmobile.stockcount.helper.*
 import com.socketmobile.stockcount.model.RMFile
@@ -42,10 +46,12 @@ import java.util.*
 class EditActivity : AppCompatActivity() {
     lateinit var file: RMFile
     private var captureClient: CaptureClient? = null
+    private var captureExtension: CaptureExtension? = null
     private var serviceStatus = ConnectionState.DISCONNECTED
     private val tag = EditActivity::class.java.name
     private val deviceStateMap = HashMap<String, DeviceState>()
     private val deviceClientMap = HashMap<String, DeviceClient>()
+    private var socketCamDeviceReadyListener: SocketCamDeviceReadyListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,15 +165,49 @@ class EditActivity : AppCompatActivity() {
         val dialogFrag = CompanionDialogFragment()
         dialogFrag.companionDialogListener = object: OnCompanionDialogListener {
             override fun onUseCamera() {
-                AlertDialog.Builder(this@EditActivity)
-                        .setMessage(R.string.feature_will_be_soon)
-                        .setPositiveButton(R.string.ok) { dialog, _ ->
-                            dialog.dismiss()
-                        }.create().show()
+                startSocketCamExtension()
             }
         }
         dialogFrag.show(supportFragmentManager, getString(R.string.title_companion_dialog))
     }
+    private fun startSocketCamExtension() {
+        val client = captureClient ?: return
+        socketCamDeviceReadyListener = object: SocketCamDeviceReadyListener {
+            override fun onSocketCamDeviceReady() {
+                triggerDevices()
+            }
+        }
+
+        captureExtension = CaptureExtension.Builder()
+                .setContext(this)
+                .setClientHandle(client.handle)
+                .setExtensionScope(ExtensionScope.LOCAL)
+                .setListener(object: CaptureExtension.Listener {
+                    override fun onExtensionStateChanged(connectionState: ConnectionState?) {
+                        Log.d(tag, "Extension State Changed : ${connectionState?.intValue()}")
+                        if (connectionState?.intValue() == ConnectionState.CONNECTED) {
+                            client.setSocketCamStatus(SocketCamStatus.ENABLE) {err, property ->
+                                if (err != null) {
+                                    Log.d(tag, "Failed setSocketCamStatus ${err.message}")
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onError(error: CaptureError?) {
+                        if (error != null) {
+                            Log.d(tag, "Error on start Capture Extension: ${error.message}")
+                        }
+                    }
+                })
+                .build()
+        captureExtension?.start()
+    }
+
+    private fun stopSocketCamExtension() {
+        captureExtension?.stop()
+    }
+
     private fun onScanClicked() {
         if (canTriggerScanner()) {
             triggerDevices()
@@ -223,10 +263,20 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun triggerDevices() {
-        val readyDeviceGuids = deviceStateMap.filter { entry -> entry.value.intValue() == DeviceState.READY }.keys
-        val readyDevices = deviceClientMap.filter { entry -> readyDeviceGuids.contains(entry.key) }.values
-        for(device in readyDevices) {
-            device.trigger { error, property ->
+        val readyDevices = deviceStateMap
+                .filter { it.value.intValue() == DeviceState.READY }.keys
+                .mapNotNull { deviceClientMap[it] }
+
+        var bluetoothReaders = readyDevices.filter { entry -> !entry.isSocketCamDevice() }
+        var socketCamDevices = readyDevices.filter { entry -> entry.isSocketCamDevice() }
+        if (bluetoothReaders.count() > 0) {
+            for(device in bluetoothReaders) {
+                device.trigger { error, property ->
+                    Log.d(tag, "trigger callback : $error, $property")
+                }
+            }
+        } else {
+            socketCamDevices.firstOrNull()?.trigger{ error, property ->
                 Log.d(tag, "trigger callback : $error, $property")
             }
         }
@@ -256,10 +306,17 @@ class EditActivity : AppCompatActivity() {
     }
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onCaptureDeviceStateChange(event: DeviceStateEvent) {
-        val scannerStatus = event.state.intValue()
-        val deviceGuid = event.device.deviceGuid
-        deviceStateMap[deviceGuid] = event.state
-        deviceClientMap[deviceGuid] = event.device
+        val device = event.device
+        var state = event.state
+        val scannerStatus = state.intValue()
+        val deviceGuid = device.deviceGuid
+        deviceStateMap[deviceGuid] = state
+        deviceClientMap[deviceGuid] = device
+
+        if (!device.isSocketCamDevice()) {
+            stopSocketCamExtension()
+        }
+        Log.d(tag, "Scanner : ${device.deviceName} - ${device.deviceGuid}")
 
         when(scannerStatus) {
             DeviceState.AVAILABLE -> {
@@ -270,9 +327,13 @@ class EditActivity : AppCompatActivity() {
             }
             DeviceState.READY -> {
                 Log.d(tag, "Scanner State Ready.")
+                socketCamDeviceReadyListener?.onSocketCamDeviceReady()
+                socketCamDeviceReadyListener = null
             }
             DeviceState.GONE -> {
                 Log.d(tag, "Scanner State Gone.")
+                deviceStateMap.remove(deviceGuid)
+                deviceClientMap.remove(deviceGuid)
             }
             else -> {
                 Log.d(tag, "Scanner State $scannerStatus")
@@ -358,4 +419,7 @@ class EditActivity : AppCompatActivity() {
     private fun enableDeviceButton(enabled: Boolean) {
         deviceButton.isEnabled = enabled
     }
+}
+interface SocketCamDeviceReadyListener {
+    fun onSocketCamDeviceReady()
 }
