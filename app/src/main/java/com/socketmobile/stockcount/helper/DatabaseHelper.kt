@@ -58,19 +58,6 @@ fun deleteRMFile(file: RMFile) {
     Realm.getDefaultInstance().executeTransaction {
         file.deleteFromRealm()
     }
-    clearStockCountDir()
-}
-
-fun getStockCountDir(): File {
-    val tempDir = File(Environment.getExternalStorageDirectory(), "StockCount")
-    if (!tempDir.exists()) {
-        tempDir.mkdir()
-    }
-    return tempDir
-}
-
-fun clearStockCountDir() {
-    getStockCountDir().deleteOnExit()
 }
 
 fun getFileNameWithExt(c: Context, file: RMFile): String {

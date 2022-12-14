@@ -91,19 +91,6 @@ class EditActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                } else {
-                    requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
-                }
-            }
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item?.itemId) {
             R.id.menuDelete -> {
@@ -243,8 +230,11 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun shareContent() {
-        clearStockCountDir()
-        val tempFile = File(getStockCountDir(), getFileNameWithExt(this, file))
+        val stockCountDir = File(cacheDir, "StockCount")
+        if (!stockCountDir.exists()) {
+            stockCountDir.mkdirs()
+        }
+        val tempFile = File(stockCountDir, getFileNameWithExt(this, file))
         tempFile.deleteOnExit()
         val fos = FileOutputStream(tempFile)
         if (isConsolidatingCounts(this)) {
